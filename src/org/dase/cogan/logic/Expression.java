@@ -16,4 +16,9 @@ public class Expression
 		// TODO
 		return null;
 	}
+	
+	public String toString()
+	{
+		return root.toString();
+	}
 }
