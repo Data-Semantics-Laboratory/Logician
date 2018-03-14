@@ -1,6 +1,6 @@
 package org.dase.cogan.operation;
 
-public class Disjunction extends Operation
+public class Disjunction extends BinaryOperator
 {
 	/** Default Constructor */
 	public Disjunction(Node leftFormula, Node rightFormula)

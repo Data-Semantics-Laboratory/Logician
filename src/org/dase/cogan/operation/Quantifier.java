@@ -8,10 +8,14 @@ package org.dase.cogan.operation;
  * @author Cogs
  *
  */
-public abstract class Quantifier extends Node
+public abstract class Quantifier extends UnaryOperator
 {
-	private Node formula;
 	private String boundVar;
+	
+	public boolean isQuantifier()
+	{
+		return true;
+	}
 	
 	public String getBoundVar()
 	{
@@ -23,22 +27,12 @@ public abstract class Quantifier extends Node
 		this.boundVar = boundVar;
 	}
 
-	public void setFormula(Node formula)
-	{
-		this.formula = formula;
-	}
-
-	public Node getFormula()
-	{
-		return this.formula;
-	}
-
 	public String toString()
 	{
 		// Construct
 		String line = super.getLabel() + boundVar;
 		line += "[";
-		line += formula.toString();
+		line += super.getFormula().toString();
 		line += "]";
 		// Done
 		return line;

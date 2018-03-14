@@ -1,6 +1,6 @@
 package org.dase.cogan.operation;
 
-public class Conjunction extends Operation
+public class Conjunction extends BinaryOperator
 {
 	/** Default Constructor */
 	public Conjunction(Node leftFormula, Node rightFormula)

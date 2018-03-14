@@ -2,15 +2,13 @@ package org.dase.cogan.operation;
 
 import org.dase.cogan.logic.Predicate;
 
-public class Negation extends Node
+public class Negation extends UnaryOperator
 {
-	private Node formula;
-
 	/** default constructor */
 	public Negation(Node formula)
 	{
 		super.setLabel("-");
-		this.formula = formula;
+		super.setFormula(formula);
 	}
 
 	/** standard to string */
@@ -18,7 +16,7 @@ public class Negation extends Node
 	{
 		// Construct
 		String line = super.getLabel();
-		line += formula.toString();
+		line += super.getFormula().toString();
 		// Done
 		return line;
 	}
@@ -26,16 +24,16 @@ public class Negation extends Node
 	/** --F = F */
 	public Node negate()
 	{
-		return formula;
+		return super.getFormula();
 	}
 
 	public Node toNNF()
 	{
 		// Apply the negation sign
-		Node negated = formula.negate();
+		Node negated = super.getFormula().negate();
 		// Get the NNF of the applied negation
 		Node formulaNNF = null;
-		if(formula instanceof Predicate)
+		if(super.getFormula() instanceof Predicate)
 		{
 			// A negated predicate is already in NNF
 			formulaNNF = negated;

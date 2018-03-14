@@ -36,6 +36,8 @@ public class RulifierREPL
 				System.out.println("The string ingested is: " + e);
 				System.out.println("The negation is:        " + e.negated());
 				System.out.println("The NNF is:             " + e.NNF());
+				System.out.println("Printing scope listing for the NNF: ");
+				e.NNF().printScope();
 			}
 
 			// TODO

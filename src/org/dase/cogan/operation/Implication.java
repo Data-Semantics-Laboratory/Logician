@@ -1,6 +1,6 @@
 package org.dase.cogan.operation;
 
-public class Implication extends Operation
+public class Implication extends BinaryOperator
 {
 	/** Default Constructor */
 	public Implication(Node leftFormula, Node rightFormula)
@@ -10,6 +10,11 @@ public class Implication extends Operation
 		super.setRightFormula(rightFormula);
 	}
 
+	public boolean isQuantifier()
+	{
+		return true;
+	}
+	
 	/**
 	 * Recall that the implication is defined as -a V b, thus the negation is
 	 * the conjunction a ^ -b

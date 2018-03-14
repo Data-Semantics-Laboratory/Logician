@@ -6,7 +6,7 @@ package org.dase.cogan.operation;
  * @author Cogs
  *
  */
-public abstract class Operation extends Node
+public abstract class BinaryOperator extends Node
 {
 	private Node	leftFormula;
 	private Node	rightFormula;
@@ -31,6 +31,11 @@ public abstract class Operation extends Node
 		this.rightFormula = rightFormula;
 	}
 
+	public boolean isBinaryOperator()
+	{
+		return true;
+	}
+	
 	public String toString()
 	{
 		// Construct

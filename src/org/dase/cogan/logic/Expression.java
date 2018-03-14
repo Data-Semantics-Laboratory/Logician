@@ -1,6 +1,13 @@
 package org.dase.cogan.logic;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+import org.dase.cogan.operation.BinaryOperator;
 import org.dase.cogan.operation.Node;
+import org.dase.cogan.operation.Quantifier;
+import org.dase.cogan.operation.UnaryOperator;
 
 public class Expression
 {
@@ -46,6 +53,47 @@ public class Expression
 		return negatedExpr;
 	}
 
+	/** This method currently expects an outermost quantifier */
+	public void printScope()
+	{
+		List<String> scope = new ArrayList<>();
+		
+		Quantifier quantifier = (Quantifier) root;
+		String boundVar = quantifier.getBoundVar();
+		scope.add(boundVar);
+		
+		printScopeHelper(quantifier.getFormula(), scope);
+	}
+
+	public void printScopeHelper(Node node, List<String> scope)
+	{
+		System.out.println("Node " + node.getLabel() + " has scope " + scope);
+		
+		if(node.isQuantifier())
+		{
+			Quantifier quantifier = (Quantifier) node;
+			String boundVar = quantifier.getBoundVar();
+			scope.add(boundVar);
+			printScopeHelper(quantifier.getFormula(), scope);
+			scope.remove(boundVar);
+		}
+		else if(node.isBinaryOperator())
+		{
+			BinaryOperator binOp = (BinaryOperator) node;
+			printScopeHelper(binOp.getLeftFormula(), scope);
+			printScopeHelper(binOp.getRightFormula(), scope);
+		}
+		else if(node.isUnaryOperator())
+		{
+			UnaryOperator unOp = (UnaryOperator) node;
+			printScopeHelper(unOp.getFormula(), scope);
+		}
+		else
+		{
+			// Do nothing if Predicate
+		}
+	}
+	
 	public String toString()
 	{
 		return root.toString();

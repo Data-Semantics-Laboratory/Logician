@@ -14,8 +14,31 @@ public abstract class Node
 	/** This allows us to negate an entire expression subtree */
 	public abstract Node negate();
 
+	/** This allows us to construct an nnf of the expression subtree */
 	public abstract Node toNNF();
 
+	///////////////////////////
+	public boolean isPredicate()
+	{
+		return false;
+	}
+
+	public boolean isUnaryOperator()
+	{
+		return false;
+	}
+
+	public boolean isBinaryOperator()
+	{
+		return false;
+	}
+
+	public boolean isQuantifier()
+	{
+		return false;
+	}
+
+	///////////////////////////
 	public String toString()
 	{
 		return label;

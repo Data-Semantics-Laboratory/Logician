@@ -25,6 +25,11 @@ public class Predicate extends Node
 		}
 	}
 
+	public boolean isPredicate()
+	{
+		return true;
+	}
+	
 	/** Negation of an atom P is -P */
 	public Node negate()
 	{
