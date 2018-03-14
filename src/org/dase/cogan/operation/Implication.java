@@ -27,14 +27,15 @@ public class Implication extends Operation
 
 	public Node toNNF()
 	{
+		// Convert implication to -a v b
+		Node left = super.getLeftFormula().negate();
+		Node right = super.getRightFormula();
 		// Get the NNF of both sides
-		// This should be fine because we are not
-		// Distributing anything over the sign.
-		Node left = super.getLeftFormula().toNNF();
-		Node right = super.getRightFormula().toNNF();
-		// Package
-		Node implication = new Implication(left, right);
+		left = left.toNNF();
+		right = right.toNNF();
+		// Package as disjunction
+		Node disjunction = new Disjunction(left, right);
 		// Done
-		return implication;
+		return disjunction;
 	}
 }
