@@ -11,6 +11,7 @@ public class RulifierREPL
 	{
 		
 	}
+	
 	/** this method is a 'read eval print loop' used for testing the ingestion code. */
 	public void test()
 	{

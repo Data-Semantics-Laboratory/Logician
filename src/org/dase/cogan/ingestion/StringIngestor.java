@@ -17,13 +17,14 @@ public class StringIngestor
 	private static Stack<String> stack;
 	
 	/**
-	 * Expression is a preorder string of characters 
+	 * Expression is a preorder string of space delimited tokens 
 	 * 
-	 * * conjunction
-	 * + disjunction
-	 * > implication
-	 * A forall quantification
-	 * E some quantification
+	 * * conjunction (binary)
+	 * + disjunction (binary)
+	 * > implication (binary)
+	 * A forall quantification (unary)
+	 * E some quantification   (unary)
+	 * - negation              (unary)
 	 * @param exprString
 	 */
 	public static Expression ingest(String exprString)

@@ -2,6 +2,7 @@ package org.dase.cogan.operation;
 
 public class Implication extends Operation
 {
+	/** Default Constructor */
 	public Implication(Node leftFormula, Node rightFormula)
 	{
 		super.setLabel(">");
@@ -9,15 +10,17 @@ public class Implication extends Operation
 		super.setRightFormula(rightFormula);
 	}
 	
+	/** Recall that the implication is defined as -a V b, thus the negation is 
+	 * the conjunction a ^ -b
+	 */
 	public Node negate()
 	{
-		// Recall that > === -a V b
-		// Thus a ^ -b is the negation
+		// Negate only the right hand side
 		Node left = super.getLeftFormula();
 		Node right = super.getRightFormula().negate();
-		
+		// Construct the top level negation
 		Node conjunction = new Conjunction(left, right);
-		
+		// Done
 		return conjunction;
 	}
 }

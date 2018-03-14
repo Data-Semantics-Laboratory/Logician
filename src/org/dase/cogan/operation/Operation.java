@@ -1,5 +1,11 @@
 package org.dase.cogan.operation;
 
+/**
+ * This abstract class defines some default behavior for the binary operations
+ *  
+ * @author Cogs
+ *
+ */
 public abstract class Operation extends Node
 {
 	private Node	leftFormula;
