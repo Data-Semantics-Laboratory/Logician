@@ -11,6 +11,17 @@ package org.dase.cogan.operation;
 public abstract class Quantifier extends Node
 {
 	private Node formula;
+	private String boundVar;
+	
+	public String getBoundVar()
+	{
+		return boundVar;
+	}
+
+	public void setBoundVar(String boundVar)
+	{
+		this.boundVar = boundVar;
+	}
 
 	public void setFormula(Node formula)
 	{
@@ -25,7 +36,8 @@ public abstract class Quantifier extends Node
 	public String toString()
 	{
 		// Construct
-		String line = super.getLabel() + "[";
+		String line = super.getLabel() + boundVar;
+		line += "[";
 		line += formula.toString();
 		line += "]";
 		// Done

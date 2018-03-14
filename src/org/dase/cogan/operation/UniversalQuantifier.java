@@ -3,9 +3,10 @@ package org.dase.cogan.operation;
 public class UniversalQuantifier extends Quantifier
 {
 	/** Default Constructor */
-	public UniversalQuantifier(Node formula)
+	public UniversalQuantifier(String boundVar, Node formula)
 	{
 		super.setLabel("A");
+		super.setBoundVar(boundVar);
 		super.setFormula(formula);
 	}
 
@@ -18,7 +19,7 @@ public class UniversalQuantifier extends Quantifier
 		// Negate the inside
 		Node formula = super.getFormula().negate();
 		// Flip the sign
-		Node existential = new ExistentialQuantifier(formula);
+		Node existential = new ExistentialQuantifier(super.getBoundVar(), formula);
 		// Done
 		return existential;
 	}
@@ -28,7 +29,7 @@ public class UniversalQuantifier extends Quantifier
 		// Get the NNF of the formula
 		Node formula = super.getFormula().toNNF();
 		// Package
-		Node universal = new UniversalQuantifier(formula);
+		Node universal = new UniversalQuantifier(super.getBoundVar(), formula);
 		// Done
 		return universal;
 	}

@@ -3,9 +3,10 @@ package org.dase.cogan.operation;
 public class ExistentialQuantifier extends Quantifier
 {
 	/** Default Constructor */
-	public ExistentialQuantifier(Node formula)
+	public ExistentialQuantifier(String boundVar, Node formula)
 	{
 		super.setLabel("E");
+		super.setBoundVar(boundVar);
 		super.setFormula(formula);
 	}
 
@@ -17,7 +18,7 @@ public class ExistentialQuantifier extends Quantifier
 		// Negate the formula
 		Node formula = super.getFormula().negate();
 		// Flip the quantifier
-		Node universal = new UniversalQuantifier(formula);
+		Node universal = new UniversalQuantifier(super.getBoundVar(), formula);
 		// Done
 		return universal;
 	}
@@ -27,7 +28,7 @@ public class ExistentialQuantifier extends Quantifier
 		// Get the NNF of the formula
 		Node formula = super.getFormula().toNNF();
 		// Package
-		Node existential = new ExistentialQuantifier(formula);
+		Node existential = new ExistentialQuantifier(super.getBoundVar(), formula);
 		// Done
 		return existential;
 	}

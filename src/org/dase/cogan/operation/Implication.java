@@ -24,7 +24,8 @@ public class Implication extends Operation
 		// Done
 		return conjunction;
 	}
-
+	
+	/** We want to remove the implication for the NNF*/
 	public Node toNNF()
 	{
 		// Convert implication to -a v b

@@ -26,6 +26,11 @@ public class StringIngestor
 	 * A forall quantification (unary)
 	 * E some quantification   (unary)
 	 * - negation              (unary)
+	 * 
+	 * Quantifiers are expected to have a variable of some sort after them.
+	 * An example string is
+	 * Ax > Px > Ay Rxy Cy
+	 * 
 	 * @param exprString
 	 */
 	// @formatter:on
@@ -52,13 +57,17 @@ public class StringIngestor
 		String token = stack.pop();
 		Node node = null;
 
-		if(token.equals("A")) // Universal
+		if(token.startsWith("A")) // Universal
 		{
-			node = new UniversalQuantifier(ingestHelper());
+			// Strip off the bound variable from
+			String boundVar = token.substring(1);
+			node = new UniversalQuantifier(boundVar, ingestHelper());
 		}
-		else if(token.equals("E")) // Existential
+		else if(token.startsWith("E")) // Existential
 		{
-			node = new ExistentialQuantifier(ingestHelper());
+			// Strip off the bound variable
+			String boundVar = token.substring(1);
+			node = new ExistentialQuantifier(boundVar, ingestHelper());
 		}
 		else if(token.equals("+")) // Disjunction
 		{
