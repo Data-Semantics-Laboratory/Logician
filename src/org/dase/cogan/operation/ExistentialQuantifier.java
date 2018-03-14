@@ -8,8 +8,10 @@ public class ExistentialQuantifier extends Quantifier
 		super.setLabel("E");
 		super.setFormula(formula);
 	}
-	
-	/** Negation of an existential is a universal with the formula also negated */
+
+	/**
+	 * Negation of an existential is a universal with the formula also negated
+	 */
 	public Node negate()
 	{
 		// Negate the formula
@@ -18,5 +20,15 @@ public class ExistentialQuantifier extends Quantifier
 		Node universal = new UniversalQuantifier(formula);
 		// Done
 		return universal;
+	}
+
+	public Node toNNF()
+	{
+		// Get the NNF of the formula
+		Node formula = super.getFormula().toNNF();
+		// Package
+		Node existential = new ExistentialQuantifier(formula);
+		// Done
+		return existential;
 	}
 }

@@ -6,6 +6,6 @@ import org.dase.cogan.operation.Node;
 
 public class Rule
 {
-	private List<Node> antecedent;
-	private Node consequent;
+	private List<Node>	antecedent;
+	private Node		consequent;
 }

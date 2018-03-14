@@ -1,7 +1,7 @@
 package org.dase.cogan.logic;
 
+import org.dase.cogan.operation.Negation;
 import org.dase.cogan.operation.Node;
-import org.dase.cogan.ui.Negation;
 
 public class Predicate extends Node
 {
@@ -10,7 +10,7 @@ public class Predicate extends Node
 	{
 		super.setLabel(label);
 	}
-	
+
 	/** Negation of an atom P is -P */
 	public Node negate()
 	{
@@ -18,5 +18,11 @@ public class Predicate extends Node
 		Node negate = new Negation(this);
 		// Done
 		return negate;
+	}
+
+	/** By definition, Predicates are already in NNF */
+	public Node toNNF()
+	{
+		return this;
 	}
 }

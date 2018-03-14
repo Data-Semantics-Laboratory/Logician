@@ -1,8 +1,9 @@
 package org.dase.cogan.operation;
 
 /**
- * This abstract class is for defining the default behavior for both quantifiers.
- * It prevents code duplication in the getter/setter for their labels and tostring methods
+ * This abstract class is for defining the default behavior for both
+ * quantifiers. It prevents code duplication in the getter/setter for their
+ * labels and tostring methods
  * 
  * @author Cogs
  *
@@ -10,17 +11,17 @@ package org.dase.cogan.operation;
 public abstract class Quantifier extends Node
 {
 	private Node formula;
-	
+
 	public void setFormula(Node formula)
 	{
 		this.formula = formula;
 	}
-	
+
 	public Node getFormula()
 	{
 		return this.formula;
 	}
-	
+
 	public String toString()
 	{
 		// Construct

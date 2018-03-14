@@ -9,7 +9,7 @@ public class Conjunction extends Operation
 		super.setLeftFormula(leftFormula);
 		super.setRightFormula(rightFormula);
 	}
-	
+
 	/** Negation requires demorgan's law */
 	public Node negate()
 	{
@@ -20,5 +20,16 @@ public class Conjunction extends Operation
 		Node disjunction = new Disjunction(left, right);
 		// Done
 		return disjunction;
+	}
+
+	public Node toNNF()
+	{
+		// Get the NNF of both sides
+		Node left = super.getLeftFormula().toNNF();
+		Node right = super.getRightFormula().toNNF();
+		// Conjoin
+		Node conjunction = new Conjunction(left, right);
+		// Done
+		return conjunction;
 	}
 }
