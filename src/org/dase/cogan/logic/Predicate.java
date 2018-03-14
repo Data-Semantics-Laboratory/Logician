@@ -14,8 +14,9 @@ public class Predicate extends Node
 	/** Negation of an atom P is -P */
 	public Node negate()
 	{
+		// Negate
 		Node negate = new Negation(this);
-		
+		// Done
 		return negate;
 	}
 }

@@ -11,10 +11,21 @@ public class Expression
 		this.root = root;
 	}
 	
+	public Rule convertToRule() throws CannotConvertToRuleException
+	{
+		// TODO: implement rule conversion
+		return null;
+	}
+	
 	public Expression NNF()
 	{
-		// TODO
+		// TODO: implement NNF (negation normal form)
 		return null;
+	}
+	
+	public Expression negated()
+	{
+		return new Expression(root.negate());
 	}
 	
 	public String toString()
