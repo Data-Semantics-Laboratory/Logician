@@ -67,7 +67,7 @@ public class Expression
 
 	public void printScopeHelper(Node node, List<String> scope)
 	{
-		System.out.println("Node " + node.getLabel() + " has scope " + scope);
+		System.out.println("\tNode " + node.getLabel() + " has scope " + scope);
 		
 		if(node.isQuantifier())
 		{
