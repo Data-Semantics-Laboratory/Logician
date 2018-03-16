@@ -52,6 +52,10 @@ public class StringIngestor
 		return expression;
 	}
 
+	/**
+	 * This method creates the formula recursively by determining which sort of
+	 * node to construct based on the ingested token
+	 */
 	public static Node ingestHelper()
 	{
 		String token = stack.pop();

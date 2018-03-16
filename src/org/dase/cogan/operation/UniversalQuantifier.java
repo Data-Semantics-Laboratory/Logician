@@ -24,6 +24,7 @@ public class UniversalQuantifier extends Quantifier
 		return existential;
 	}
 
+	/** Converts the bound formula to NNF */
 	public Node toNNF()
 	{
 		// Get the NNF of the formula

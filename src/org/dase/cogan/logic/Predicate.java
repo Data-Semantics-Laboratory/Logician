@@ -10,7 +10,7 @@ import org.dase.cogan.operation.Node;
 public class Predicate extends Node
 {
 	private List<String> args;
-	
+
 	/** Default Constructor */
 	public Predicate(String predToken)
 	{
@@ -25,11 +25,12 @@ public class Predicate extends Node
 		}
 	}
 
+	/** Probably better practice than instanceof? */
 	public boolean isPredicate()
 	{
 		return true;
 	}
-	
+
 	/** Negation of an atom P is -P */
 	public Node negate()
 	{
@@ -44,7 +45,8 @@ public class Predicate extends Node
 	{
 		return this;
 	}
-	
+
+	/** Properly formate the args with commas a parens. */
 	public String toString()
 	{
 		String line = super.getLabel();
@@ -61,7 +63,8 @@ public class Predicate extends Node
 		line += ")";
 		return line;
 	}
-	
+
+	/** returns the arity of the predicate (i.e. number of args) */
 	public int getArity()
 	{
 		return args.size();

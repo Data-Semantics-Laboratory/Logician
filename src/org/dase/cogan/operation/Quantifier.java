@@ -11,12 +11,13 @@ package org.dase.cogan.operation;
 public abstract class Quantifier extends UnaryOperator
 {
 	private String boundVar;
-	
+
+	/** Probably better practice than instanceof? */
 	public boolean isQuantifier()
 	{
 		return true;
 	}
-	
+
 	public String getBoundVar()
 	{
 		return boundVar;

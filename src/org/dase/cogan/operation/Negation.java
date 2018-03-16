@@ -27,6 +27,10 @@ public class Negation extends UnaryOperator
 		return super.getFormula();
 	}
 
+	/**
+	 * Apply the negation and convert the resultant formulas to NNF. Note that a
+	 * predicate or negated predicate is already in NNF.
+	 */
 	public Node toNNF()
 	{
 		// Apply the negation sign

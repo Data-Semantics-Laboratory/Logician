@@ -14,6 +14,12 @@ public abstract class BinaryOperator extends Node
 	private Node	leftFormula;
 	private Node	rightFormula;
 
+	/** Probably better practice than instanceof? */
+	public boolean isBinaryOperator()
+	{
+		return true;
+	}
+
 	public Node getLeftFormula()
 	{
 		return leftFormula;
@@ -34,6 +40,7 @@ public abstract class BinaryOperator extends Node
 		this.rightFormula = rightFormula;
 	}
 
+	/** Iterable accessor for the formulas */
 	public List<Node> getFormulas()
 	{
 		List<Node> formulas = new ArrayList<>();
@@ -41,12 +48,7 @@ public abstract class BinaryOperator extends Node
 		formulas.add(rightFormula);
 		return formulas;
 	}
-	
-	public boolean isBinaryOperator()
-	{
-		return true;
-	}
-	
+
 	public String toString()
 	{
 		// Construct

@@ -10,11 +10,12 @@ public class Implication extends BinaryOperator
 		super.setRightFormula(rightFormula);
 	}
 
+	/** Probably better practice than instanceof? */
 	public boolean isQuantifier()
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Recall that the implication is defined as -a V b, thus the negation is
 	 * the conjunction a ^ -b
@@ -29,8 +30,8 @@ public class Implication extends BinaryOperator
 		// Done
 		return conjunction;
 	}
-	
-	/** We want to remove the implication for the NNF*/
+
+	/** We want to remove the implication for the NNF */
 	public Node toNNF()
 	{
 		// Convert implication to -a v b

@@ -8,6 +8,7 @@ import org.dase.cogan.logic.Expression;
 
 public class RulifierREPL
 {
+	/** Empty constructor */
 	public RulifierREPL()
 	{
 
@@ -28,9 +29,10 @@ public class RulifierREPL
 			System.out.println("Type 'exit' to quit.");
 			System.out.print("Enter a string for ingestion: ");
 
-//			String line = keyboard.nextLine();
+			// TODO debug code!
+			// String line = keyboard.nextLine();
 			String line = "Ax > * Bx Cx Dx";
-			
+
 			loop = !line.equals("exit");
 			if(loop)
 			{
@@ -40,7 +42,7 @@ public class RulifierREPL
 				System.out.println("The NNF is:             " + e.NNF());
 				System.out.println("Printing scope listing for the NNF: ");
 				e.NNF().printScope();
-				System.out.println("The clausal form is:    " + e.toClausalForm()); 
+				System.out.println("The clausal form is:    " + e.toClausalForm());
 				try
 				{
 					System.out.println("The rule form is:       " + e.toRule());

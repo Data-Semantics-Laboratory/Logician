@@ -12,16 +12,19 @@ public class Expression
 {
 	private Node root;
 
+	/** Default Constructor */
 	public Expression(Node root)
 	{
 		this.root = root;
 	}
 
+	/** This method attempts to convert the method to a rule */
 	public Rule toRule() throws CannotConvertToRuleException
 	{
 		return new Rule(this.NNF());
 	}
 
+	/** This method attempts to conver the method to its clausal form */
 	public ClausalForm toClausalForm()
 	{
 		return new ClausalForm(this.NNF());
@@ -46,6 +49,7 @@ public class Expression
 		return nnfExpr;
 	}
 
+	/** Return a negated version of this expression */
 	public Expression negated()
 	{
 		// Get the negation of the the expression

@@ -22,6 +22,7 @@ public class Conjunction extends BinaryOperator
 		return disjunction;
 	}
 
+	/** Convert each of the conjuncts to NNF */
 	public Node toNNF()
 	{
 		// Get the NNF of both sides
