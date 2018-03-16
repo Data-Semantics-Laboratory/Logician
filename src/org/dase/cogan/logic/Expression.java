@@ -2,7 +2,6 @@ package org.dase.cogan.logic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import org.dase.cogan.operation.BinaryOperator;
 import org.dase.cogan.operation.Node;
@@ -18,12 +17,16 @@ public class Expression
 		this.root = root;
 	}
 
-	public Rule convertToRule() throws CannotConvertToRuleException
+	public Rule toRule() throws CannotConvertToRuleException
 	{
-		// TODO: implement rule conversion
-		return null;
+		return new Rule(this.NNF());
 	}
 
+	public ClausalForm toClausalForm()
+	{
+		return new ClausalForm(this.NNF());
+	}
+	
 	/**
 	 * This method will construct an expression that is logically equivalent to
 	 * the original expression, but it is in negation normal form (NNF).
@@ -92,6 +95,11 @@ public class Expression
 		{
 			// Do nothing if Predicate
 		}
+	}
+	
+	public Node getRoot()
+	{
+		return this.root;
 	}
 	
 	public String toString()
