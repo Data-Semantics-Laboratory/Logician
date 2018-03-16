@@ -1,5 +1,8 @@
 package org.dase.cogan.operation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This abstract class defines some default behavior for the binary operations
  * 
@@ -31,6 +34,14 @@ public abstract class BinaryOperator extends Node
 		this.rightFormula = rightFormula;
 	}
 
+	public List<Node> getFormulas()
+	{
+		List<Node> formulas = new ArrayList<>();
+		formulas.add(leftFormula);
+		formulas.add(rightFormula);
+		return formulas;
+	}
+	
 	public boolean isBinaryOperator()
 	{
 		return true;
