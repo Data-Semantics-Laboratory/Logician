@@ -5,6 +5,7 @@ import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -50,18 +51,25 @@ public class RuleRenderer extends AbstractOWLRenderer
 	{
 		try
 		{
-			LatexWriter w = new LatexWriter(_w);
+			 LatexWriter w = new LatexWriter(_w);
 
 			// Begin preamble
 			w.write("\\documentclass{article}\n");
-			w.write("\\usepackage[fleqn]{amsmath}\n"); // amsmath must come first.
+			w.write("\\usepackage[fleqn]{amsmath}\n"); // amsmath must come
+			                                           // first.
 			w.write("\\parskip 0pt\n");
 			w.write("\\parindent 0pt\n");
 			w.write("\\oddsidemargin 0cm\n");
 			w.write("\\textwidth 19cm\n");
 			w.write("\\begin{document}\n\n");
 
-			RuleObjectVisitor renderer = new RuleObjectVisitor(w, o.getOWLOntologyManager().getOWLDataFactory());
+			// TODO: implement fopl -> rule conversion
+			// At this point, the renderer will create fopl strings.
+			// 1. We need to convert them to rules
+			// 2. Convert them to latex strings
+			StringWriter stringWriter = new StringWriter();
+			RuleObjectVisitor renderer = new RuleObjectVisitor(stringWriter, o.getOWLOntologyManager().getOWLDataFactory());
+			
 			Collection<OWLClass> clses = sortEntities(o.classesInSignature());
 
 			if(!clses.isEmpty())
