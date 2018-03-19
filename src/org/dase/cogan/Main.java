@@ -16,7 +16,7 @@ public class Main
 		else if(flag.equals("-t"))
 		{
 			RulifierREPL repl = new RulifierREPL();
-			repl.test();
+			repl.ontoTest();
 		}
 		else
 		{

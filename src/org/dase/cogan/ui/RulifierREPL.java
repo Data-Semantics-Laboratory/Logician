@@ -2,6 +2,7 @@ package org.dase.cogan.ui;
 
 import java.util.Scanner;
 
+import org.dase.cogan.ingestion.OntologyIngestor;
 import org.dase.cogan.ingestion.StringIngestor;
 import org.dase.cogan.logic.CannotConvertToRuleException;
 import org.dase.cogan.logic.Expression;
@@ -14,11 +15,18 @@ public class RulifierREPL
 
 	}
 
+	public void ontoTest()
+	{
+		String pathname = "resources/";
+		pathname += "mbe.owl";
+		OntologyIngestor.ingest(pathname);
+	}
+	
 	/**
 	 * this method is a 'read eval print loop' used for testing the ingestion
 	 * code.
 	 */
-	public void test()
+	public void stringTest()
 	{
 		// Init resources for loop
 		Scanner keyboard = new Scanner(System.in);
