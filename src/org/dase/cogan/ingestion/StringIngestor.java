@@ -61,16 +61,16 @@ public class StringIngestor
 		String token = stack.pop();
 		Node node = null;
 
-		if(token.startsWith("A")) // Universal
+		if(token.startsWith("/A")) // Universal
 		{
 			// Strip off the bound variable from
-			String boundVar = token.substring(1);
+			String boundVar = token.substring(2);
 			node = new UniversalQuantifier(boundVar, ingestHelper());
 		}
-		else if(token.startsWith("E")) // Existential
+		else if(token.startsWith("/E")) // Existential
 		{
 			// Strip off the bound variable
-			String boundVar = token.substring(1);
+			String boundVar = token.substring(2);
 			node = new ExistentialQuantifier(boundVar, ingestHelper());
 		}
 		else if(token.equals("+")) // Disjunction

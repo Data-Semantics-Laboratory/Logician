@@ -15,13 +15,19 @@ public class Predicate extends Node
 	public Predicate(String predToken)
 	{
 		// Extract and set the name of the predicate
-		String label = Character.toString(predToken.charAt(0));
+		int argIndex = predToken.indexOf("(");
+		String label = predToken.substring(0, argIndex);
 		super.setLabel(label);
-		// Extract the bound variables
+		/* Extract the bound variables */
+		// Get the strings
+		String argString = predToken.substring(argIndex+1, predToken.length()-1);
+		// Tokenize
+		String[] argTokens = argString.split(","); 
+		// Add to the arglist
 		args = new ArrayList<>();
-		for(Character c : predToken.substring(1).toCharArray())
+		for(String arg : argTokens)
 		{
-			args.add(Character.toString(c));
+			args.add(arg);
 		}
 	}
 

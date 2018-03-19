@@ -14,6 +14,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import org.dase.cogan.ingestion.RuleObjectVisitor;
+import org.dase.cogan.ingestion.StringIngestor;
+import org.dase.cogan.logic.CannotConvertToRuleException;
+import org.dase.cogan.logic.Expression;
 import org.semanticweb.owlapi.io.AbstractOWLRenderer;
 import org.semanticweb.owlapi.io.OWLRendererException;
 import org.semanticweb.owlapi.latex.renderer.LatexRendererIOException;
@@ -22,7 +25,6 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
-import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLEntityComparator;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
@@ -61,28 +63,26 @@ public class RuleRenderer extends AbstractOWLRenderer
 
 			w.write("\\subsection*{Classes}\n");
 			sortEntities(o.classesInSignature()).forEach(cls -> {
-				writeEntity(w, renderer, cls, sortAxioms(o.axioms(cls)));
+				writeEntities(stringWriter, w, renderer, cls, sortAxioms(o.axioms(cls)));
 			});
 
-/*			w.write("\\section*{Object properties}\n");
+			w.write("\\section*{Object properties}\n");
 			sortEntities(o.objectPropertiesInSignature()).forEach(p -> {
-				writeEntity(w, renderer, p, sortAxioms(o.axioms(p)));
-			});
-
-			w.write("\\section*{Data properties}\n");
-			o.dataPropertiesInSignature().sorted(entityComparator).forEach(prop -> {
-				writeEntity(w, renderer, prop, sortAxioms(o.axioms(prop)));
-			});
-
-			w.write("\\section*{Individuals}\n");
-			o.individualsInSignature().sorted(entityComparator).forEach(i -> {
-				writeEntity(w, renderer, i, sortAxioms(o.axioms(i)));
-			});
-
-			w.write("\\section*{Datatypes}\n");
-			o.datatypesInSignature().sorted(entityComparator).forEach(type -> {
-				writeEntity(w, renderer, type, sortAxioms(o.axioms(type, Imports.EXCLUDED)));
-			});*/
+			writeEntities(stringWriter, w, renderer, p, sortAxioms(o.axioms(p))); });
+			
+//			w.write("\\section*{Data properties}\n");
+//			o.dataPropertiesInSignature().sorted(entityComparator).forEach(
+//			prop -> { writeEntity(w, renderer, prop,
+//			sortAxioms(o.axioms(prop))); });
+//			
+//			w.write("\\section*{Individuals}\n");
+//			o.individualsInSignature().sorted(entityComparator).forEach(i ->
+//			{ writeEntity(w, renderer, i, sortAxioms(o.axioms(i))); });
+//			
+//			w.write("\\section*{Datatypes}\n");
+//			o.datatypesInSignature().sorted(entityComparator).forEach(type ->
+//			{ writeEntity(w, renderer, type, sortAxioms(o.axioms(type,
+//			Imports.EXCLUDED))); });
 
 			w.write("\\end{document}\n");
 			w.flush();
@@ -100,9 +100,10 @@ public class RuleRenderer extends AbstractOWLRenderer
 		w.write("}\n");
 	}
 
-	private void writeEntity(LatexWriter w, RuleObjectVisitor renderer, OWLEntity cls,
+	private void writeEntities(StringWriter sw, LatexWriter w, RuleObjectVisitor renderer, OWLEntity cls,
 	        Collection<? extends OWLAxiom> axioms)
 	{
+		// Write the header to the subsection
 		writeEntitySection(cls, w);
 		// Align over subclass and equivalent
 		if(axioms.size() > 0)
@@ -117,12 +118,28 @@ public class RuleRenderer extends AbstractOWLRenderer
 				renderer.reset();
 				axiom.getNNF().accept(renderer);
 
-				if(it.hasNext())
-				{
-					w.write("\\\\");
-				}
+				// Get string from stream
+				String foplString = sw.toString();
+				sw.getBuffer().setLength(0); // this does what .flush would do
 
-				w.write("\n");
+				Expression expr = StringIngestor.ingest(foplString);
+				try
+				{
+					String rule = expr.toRule().toString();
+					
+					w.write(rule);
+					if(it.hasNext())
+					{
+						w.write("\\\\");
+					}
+
+					w.write("\n");
+				}
+				catch(CannotConvertToRuleException e)
+				{
+					System.out.println(foplString);
+					System.out.println("The expression " + expr + "could not be converted to a rule.");
+				}
 			}
 			w.write("\\end{align*}\n\n");
 		}

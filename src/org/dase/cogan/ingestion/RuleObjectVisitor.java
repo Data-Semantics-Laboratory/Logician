@@ -115,8 +115,8 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		/** AND. */         public static final String		AND			= "* ";
 		/** OR. */          public static final String		OR			= "+ ";
 		/** NOT. */ 	    public static final String		NOT			= "- ";
-		/** ALL. */ 	    public static final String		ALL			= "A ";
-		/** SOME. */        public static final String		SOME		= "E ";
+		/** ALL. */ 	    public static final String		ALL			= "/A";
+		/** SOME. */        public static final String		SOME		= "/E";
 		/** HASVALUE. */    public static final String		HASVALUE	= "hasValue ";
 		/** MIN. */ 	    public static final String		MIN			= "\\geq";
 		/** MAX. */ 		public static final String		MAX			= "\\leq";
@@ -131,7 +131,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		/** SELF. */ 		public static final String		SELF		= "\\textsf{Self} ";
 		/** CIRC. */ 		public static final String		CIRC		= "\\circ ";
 		/** INVERSE */ 		public static final String		INVERSE		= "^-";
-		/** RARROW */		public static final String		RARROW		= "&\\rightarrow";
+		/** RARROW */		public static final String		RARROW		= "> ";
 		// @formatter:on
 	///////////////////////////////////////////////////////////////
 
@@ -216,18 +216,19 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 
 	private void writeScope()
 	{
-		writer.write("x_{" + scope.peek() + "}");
+		writer.write(curScope());
 	}
 
 	private void writeHardSpace()
 	{
-		writer.write("~");
+		writer.write(" ");
+//		writer.write("~");
 	}
 
 	/********************************************************/
 	private String curScope()
 	{
-		return "x_{" + scope.peek() + "}";
+		return Integer.toString(scope.peek());
 	}
 
 	private String upScope()
@@ -248,8 +249,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		// Do not write anything for top
 		if(!name.equals("Thing") || true)
 		{
-			name = "\\text{" + name + "}";
-
 			if(!suppress)
 			{
 				name += "(";
@@ -265,12 +264,14 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLSubClassOfAxiom axiom)
 	{
+		// Entering new scope
 		scope.push(usedVars++);
-		// Most external quantifier is assumed
-		///////////////////////
-		axiom.getSubClass().accept(this);
-		writeSpace();
+		// Write quantifier
+		write(ALL);
+		write(curScope() + " ");
+		// Write implication in preorder
 		write(RARROW);
+		axiom.getSubClass().accept(this);
 		writeSpace();
 		axiom.getSuperClass().accept(this);
 		///////////////////////
@@ -353,7 +354,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLObjectProperty property)
 	{
 		String prop = escapeName(shortFormProvider.getShortForm(property));
-		prop = "\\text{" + prop + "}";
 
 		String s = "";
 		if(!suppress)
@@ -420,12 +420,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		write(ALL);
 		writeScope();
-		write("(");
+		writeSpace();
+		write(RARROW);
 		ce.getProperty().accept(this);
-		write("\\rightarrow");
 		writeSpace();
 		writeNested(ce.getFiller());
-		write(")");
 		scope.pop();
 	}
 
@@ -436,11 +435,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		write(SOME);
 		writeScope();
-		write("(");
-		ce.getProperty().accept(this);
+		writeSpace();
 		write(AND);
+		ce.getProperty().accept(this);
+		writeSpace();
 		writeNested(ce.getFiller());
-		write(")");
 		scope.pop();
 	}
 
@@ -595,13 +594,10 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		write(ALL);
 		writeScope();
-		writeHardSpace();
-		df.getOWLObjectSomeValuesFrom(axiom.getProperty(), df.getOWLThing()).accept(this);
-
 		writeSpace();
 		write(RARROW);
+		df.getOWLObjectSomeValuesFrom(axiom.getProperty(), df.getOWLThing()).accept(this);
 		writeSpace();
-
 		axiom.getDomain().accept(this);
 		scope.pop();
 	}
@@ -612,13 +608,10 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		write(SOME);
 		writeScope();
-		writeHardSpace();
-		df.getOWLThing().accept(this);
-
 		writeSpace();
 		write(RARROW);
+		df.getOWLThing().accept(this);
 		writeSpace();
-
 		df.getOWLObjectAllValuesFrom(axiom.getProperty(), axiom.getRange()).accept(this);
 		scope.pop();
 	}
@@ -661,7 +654,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeScope();
 		write("(");
 		ce.getProperty().accept(this);
-		write("\\rightarrow");
+		write(RARROW);
 		writeSpace();
 		writeNested(ce.getFiller());
 		write(")");
