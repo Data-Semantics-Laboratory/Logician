@@ -19,7 +19,6 @@ import org.semanticweb.owlapi.io.OWLRendererException;
 import org.semanticweb.owlapi.latex.renderer.LatexRendererIOException;
 import org.semanticweb.owlapi.latex.renderer.LatexWriter;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
@@ -34,69 +33,56 @@ public class RuleRenderer extends AbstractOWLRenderer
 	private final ShortFormProvider		shortFormProvider	= new SimpleShortFormProvider();
 	private final OWLEntityComparator	entityComparator	= new OWLEntityComparator(shortFormProvider);
 
-	private void writeEntitySection(OWLEntity entity, LatexWriter w)
-	{
-		w.write("\\subsubsection*{");
-		w.write(escapeName(shortFormProvider.getShortForm(entity)));
-		w.write("}\n");
-	}
-
-	private static String escapeName(String name)
-	{
-		return name.replace("_", "\\_").replace("#", "\\#");
-	}
-
 	@Override
 	public void render(OWLOntology o, PrintWriter _w) throws OWLRendererException
 	{
 		try
 		{
-			 LatexWriter w = new LatexWriter(_w);
+			// Wrap the printwriter with a latex writer
+			LatexWriter w = new LatexWriter(_w);
 
-			// Begin preamble
+			/* Begin preamble */
 			w.write("\\documentclass{article}\n");
-			w.write("\\usepackage[fleqn]{amsmath}\n"); // amsmath must come
-			                                           // first.
+			w.write("\\usepackage[fleqn]{amsmath}\n"); // amsmath must be first.
 			w.write("\\parskip 0pt\n");
 			w.write("\\parindent 0pt\n");
 			w.write("\\oddsidemargin 0cm\n");
 			w.write("\\textwidth 19cm\n");
 			w.write("\\begin{document}\n\n");
+			/* End preamble */
 
 			// TODO: implement fopl -> rule conversion
 			// At this point, the renderer will create fopl strings.
 			// 1. We need to convert them to rules
 			// 2. Convert them to latex strings
 			StringWriter stringWriter = new StringWriter();
-			RuleObjectVisitor renderer = new RuleObjectVisitor(stringWriter, o.getOWLOntologyManager().getOWLDataFactory());
-			
-			Collection<OWLClass> clses = sortEntities(o.classesInSignature());
+			RuleObjectVisitor renderer = new RuleObjectVisitor(stringWriter,
+			        o.getOWLOntologyManager().getOWLDataFactory());
 
-			if(!clses.isEmpty())
-			{
-				w.write("\\subsection*{Classes}\n");
-				for(OWLClass cls : clses)
-				{
-					writeEntity(w, renderer, cls, sortAxioms(o.axioms(cls)));
-				}
-			}
+			w.write("\\subsection*{Classes}\n");
+			sortEntities(o.classesInSignature()).forEach(cls -> {
+				writeEntity(w, renderer, cls, sortAxioms(o.axioms(cls)));
+			});
 
-			w.write("\\section*{Object properties}\n");
+/*			w.write("\\section*{Object properties}\n");
 			sortEntities(o.objectPropertiesInSignature()).forEach(p -> {
 				writeEntity(w, renderer, p, sortAxioms(o.axioms(p)));
 			});
 
 			w.write("\\section*{Data properties}\n");
-			o.dataPropertiesInSignature().sorted(entityComparator)
-			        .forEach(prop -> writeEntity(w, renderer, prop, sortAxioms(o.axioms(prop))));
+			o.dataPropertiesInSignature().sorted(entityComparator).forEach(prop -> {
+				writeEntity(w, renderer, prop, sortAxioms(o.axioms(prop)));
+			});
 
 			w.write("\\section*{Individuals}\n");
-			o.individualsInSignature().sorted(entityComparator)
-			        .forEach(i -> writeEntity(w, renderer, i, sortAxioms(o.axioms(i))));
+			o.individualsInSignature().sorted(entityComparator).forEach(i -> {
+				writeEntity(w, renderer, i, sortAxioms(o.axioms(i)));
+			});
 
 			w.write("\\section*{Datatypes}\n");
-			o.datatypesInSignature().sorted(entityComparator)
-			        .forEach(type -> writeEntity(w, renderer, type, sortAxioms(o.axioms(type, Imports.EXCLUDED))));
+			o.datatypesInSignature().sorted(entityComparator).forEach(type -> {
+				writeEntity(w, renderer, type, sortAxioms(o.axioms(type, Imports.EXCLUDED)));
+			});*/
 
 			w.write("\\end{document}\n");
 			w.flush();
@@ -107,7 +93,14 @@ public class RuleRenderer extends AbstractOWLRenderer
 		}
 	}
 
-	protected void writeEntity(LatexWriter w, RuleObjectVisitor renderer, OWLEntity cls,
+	private void writeEntitySection(OWLEntity entity, LatexWriter w)
+	{
+		w.write("\\subsubsection*{");
+		w.write(escapeName(shortFormProvider.getShortForm(entity)));
+		w.write("}\n");
+	}
+
+	private void writeEntity(LatexWriter w, RuleObjectVisitor renderer, OWLEntity cls,
 	        Collection<? extends OWLAxiom> axioms)
 	{
 		writeEntitySection(cls, w);
@@ -135,23 +128,29 @@ public class RuleRenderer extends AbstractOWLRenderer
 		}
 	}
 
+	/** Sorts entities alphabetically */
 	private <T extends OWLEntity> Collection<T> sortEntities(Stream<T> entities)
 	{
 		return asList(entities.sorted(entityComparator));
 	}
 
+	/** sorts axioms alphabetically */
 	private static Collection<? extends OWLAxiom> sortAxioms(Stream<? extends OWLAxiom> axioms)
 	{
 		return asList(axioms.sorted(new OWLAxiomComparator()));
 	}
 
-	@SuppressWarnings("serial")
+	/** escapes _ and # for latex compilation */
+	private static String escapeName(String name)
+	{
+		return name.replace("_", "\\_").replace("#", "\\#");
+	}
+
+	/** for use in comparing axioms */
 	private static class OWLAxiomComparator implements Comparator<OWLAxiom>, Serializable
 	{
-
-		OWLAxiomComparator()
-		{
-		}
+		/** bookkeeping */
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public int compare(@Nullable OWLAxiom o1, @Nullable OWLAxiom o2)

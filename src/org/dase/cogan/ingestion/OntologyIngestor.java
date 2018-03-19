@@ -40,7 +40,8 @@ public class OntologyIngestor
 			e.printStackTrace();
 		}
 	}
-	
+
+	/** This method simply extracts the filename from the provided path */
 	private static String extractFilename(String pathname)
 	{
 		// Get nodes
