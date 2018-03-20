@@ -15,13 +15,38 @@ public class Rule
 	private Node		consequent;
 	private Node		rule;
 
+	private boolean		verbose;
+
 	/** Default Constructor */
 	public Rule(Expression expr) throws CannotConvertToRuleException
 	{
 		this.expr = expr;
 		this.clausalForm = expr.toClausalForm();
 
-		createRule();
+		if(expr.getRoot() instanceof PredicateRelation)
+		{
+			rule = expr.getRoot();
+		}
+		else
+		{
+			createRule();
+		}
+	}
+
+	public Rule(Expression expr, boolean verbose) throws CannotConvertToRuleException
+	{
+		this.expr = expr;
+		this.clausalForm = expr.toClausalForm();
+		this.verbose = verbose;
+
+		if(expr.getRoot() instanceof PredicateRelation)
+		{
+			rule = expr.getRoot();
+		}
+		else
+		{
+			createRule();
+		}
 	}
 
 	/** toplevel procedure for creating the rule */
@@ -33,7 +58,14 @@ public class Rule
 		// Construct the Rule!
 		Node implication = new Implication(antecedent, consequent);
 		// Bind the variables in the outermost scope
-		createQuantifierChain(implication);
+		if(verbose)
+		{
+			createQuantifierChain(implication);
+		}
+		else
+		{
+			rule = implication;
+		}
 	}
 
 	/**
@@ -125,7 +157,7 @@ public class Rule
 	{
 		return this.rule.toLatexString();
 	}
-	
+
 	public String toString()
 	{
 		return this.rule.toString();

@@ -90,10 +90,15 @@ public class Predicate extends Node
 		line += ")";
 		return line;
 	}
-
+	
 	/** returns the arity of the predicate (i.e. number of args) */
 	public int getArity()
 	{
 		return args.size();
+	}
+
+	public List<String> getArgs()
+	{
+		return this.args;
 	}
 }

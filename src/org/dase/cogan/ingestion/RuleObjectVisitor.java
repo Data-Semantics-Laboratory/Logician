@@ -288,7 +288,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		{
 			suppress = true;
 			// Use AllDisjoint syntax to prevent huge number of axioms
-			write("\\textit{AllDifferent}&(");
+			write("#AllDifferent(");
 			// Write each class
 			for(Iterator<OWLClassExpression> it = classExpressions.iterator(); it.hasNext();)
 			{
@@ -296,7 +296,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 				if(it.hasNext())
 				{
 					write(",");
-					writeSpace();
 				}
 			}
 			write(")");
@@ -489,13 +488,12 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLFunctionalObjectPropertyAxiom axiom)
 	{
-		scope.push(usedVars++);
-
-		write(RARROW);
-		writeHardSpace();
-		df.getOWLObjectMaxCardinality(1, axiom.getProperty()).accept(this);
-
-		scope.pop();
+		write("#Functional");
+		write("(");
+		suppress = true;
+		axiom.getProperty().accept(this);
+		suppress = false;
+		write(")");
 	}
 
 	/************* Object Individuals ************/
@@ -515,7 +513,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLObjectOneOf ce)
 	{
-		write("oneOf");
+		write("#OneOf");
 		writeOpenBrace();
 		for(Iterator<? extends OWLIndividual> it = ce.individuals().iterator(); it.hasNext();)
 		{

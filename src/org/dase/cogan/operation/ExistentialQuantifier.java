@@ -38,6 +38,7 @@ public class ExistentialQuantifier extends Quantifier
 	public String toLatexString()
 	{
 		String line = "\\exists ";
+		line += "x_{" + super.getBoundVar() + "}";
 		line += "(";
 		line += super.getFormula().toLatexString();
 		line += ")";

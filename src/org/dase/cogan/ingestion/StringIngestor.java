@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import org.dase.cogan.logic.Expression;
 import org.dase.cogan.logic.Predicate;
+import org.dase.cogan.logic.PredicateRelation;
 import org.dase.cogan.operation.Conjunction;
 import org.dase.cogan.operation.Disjunction;
 import org.dase.cogan.operation.ExistentialQuantifier;
@@ -72,6 +73,10 @@ public class StringIngestor
 			// Strip off the bound variable
 			String boundVar = token.substring(2);
 			node = new ExistentialQuantifier(boundVar, ingestHelper());
+		}
+		else if(token.startsWith("#")) // Predicate Relation (control sequence)
+		{
+			node = new PredicateRelation(token);
 		}
 		else if(token.equals("+")) // Disjunction
 		{

@@ -36,11 +36,18 @@ public class ClausalForm
 	/** toplevel construction of the clausalform */
 	private void clausalForm()
 	{
-		// Strip the first quantifier away
-		Quantifier quantifier = (Quantifier) expr.getRoot();
-		scope.add(quantifier.getBoundVar());
-		// Starting with the root formula
-		clausalFormHelper(clauses, scope, quantifier.getFormula());
+		if(expr.getRoot() instanceof PredicateRelation)
+		{
+			clauses.add(expr.getRoot());
+		}
+		else
+		{
+			// Strip the first quantifier away
+			Quantifier quantifier = (Quantifier) expr.getRoot();
+			scope.add(quantifier.getBoundVar());
+			// Starting with the root formula
+			clausalFormHelper(clauses, scope, quantifier.getFormula());
+		}
 	}
 
 	/**
