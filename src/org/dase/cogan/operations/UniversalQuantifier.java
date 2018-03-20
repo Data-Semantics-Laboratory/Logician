@@ -1,26 +1,27 @@
-package org.dase.cogan.operation;
+package org.dase.cogan.operations;
 
-public class ExistentialQuantifier extends Quantifier
+public class UniversalQuantifier extends Quantifier
 {
 	/** Default Constructor */
-	public ExistentialQuantifier(String boundVar, Node formula)
+	public UniversalQuantifier(String boundVar, Node formula)
 	{
-		super.setLabel("E");
+		super.setLabel("A");
 		super.setBoundVar(boundVar);
 		super.setFormula(formula);
 	}
 
 	/**
-	 * Negation of an existential is a universal with the formula also negated
+	 * Negation of a universal quantifier is an existential, with the internal
+	 * formula also negated.
 	 */
 	public Node negate()
 	{
-		// Negate the formula
+		// Negate the inside
 		Node formula = super.getFormula().negate();
-		// Flip the quantifier
-		Node universal = new UniversalQuantifier(super.getBoundVar(), formula);
+		// Flip the sign
+		Node existential = new ExistentialQuantifier(super.getBoundVar(), formula);
 		// Done
-		return universal;
+		return existential;
 	}
 
 	/** Converts the bound formula to NNF */
@@ -29,15 +30,15 @@ public class ExistentialQuantifier extends Quantifier
 		// Get the NNF of the formula
 		Node formula = super.getFormula().toNNF();
 		// Package
-		Node existential = new ExistentialQuantifier(super.getBoundVar(), formula);
+		Node universal = new UniversalQuantifier(super.getBoundVar(), formula);
 		// Done
-		return existential;
+		return universal;
 	}
 	
 	/** Infix latex string */
 	public String toLatexString()
 	{
-		String line = "\\exists ";
+		String line = "\\forall ";
 		line += "x_{" + super.getBoundVar() + "}";
 		line += "(";
 		line += super.getFormula().toLatexString();

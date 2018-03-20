@@ -1,4 +1,4 @@
-package org.dase.cogan.operation;
+package org.dase.cogan.operations;
 
 /**
  * This abstract class is for defining the default behavior for both

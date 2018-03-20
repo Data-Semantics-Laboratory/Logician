@@ -1,11 +1,11 @@
-package org.dase.cogan.operation;
+package org.dase.cogan.operations;
 
-public class Disjunction extends BinaryOperator
+public class Conjunction extends BinaryOperator
 {
 	/** Default Constructor */
-	public Disjunction(Node leftFormula, Node rightFormula)
+	public Conjunction(Node leftFormula, Node rightFormula)
 	{
-		super.setLabel("+");
+		super.setLabel("*");
 		super.setLeftFormula(leftFormula);
 		super.setRightFormula(rightFormula);
 	}
@@ -17,28 +17,28 @@ public class Disjunction extends BinaryOperator
 		Node left = super.getLeftFormula().negate();
 		Node right = super.getRightFormula().negate();
 		// Flip the sign
-		Node conjunction = new Conjunction(left, right);
+		Node disjunction = new Disjunction(left, right);
 		// Done
-		return conjunction;
+		return disjunction;
 	}
 
-	/** convert each of the disjuncts to NNF */
+	/** Convert each of the conjuncts to NNF */
 	public Node toNNF()
 	{
 		// Get the NNF of both sides
 		Node left = super.getLeftFormula().toNNF();
 		Node right = super.getRightFormula().toNNF();
-		// Disjoin
-		Node disjunction = new Disjunction(left, right);
+		// Conjoin
+		Node conjunction = new Conjunction(left, right);
 		// Done
-		return disjunction;
+		return conjunction;
 	}
 	
 	/** Infix latex string */
 	public String toLatexString()
 	{
 		String line = super.getLeftFormula().toLatexString();
-		line += " \\vee ";
+		line += " \\wedge ";
 		line += super.getRightFormula().toLatexString();
 		
 		return line; // TODO document

@@ -2,10 +2,10 @@ package org.dase.cogan.logic;
 
 import java.util.List;
 
-import org.dase.cogan.operation.Conjunction;
-import org.dase.cogan.operation.Implication;
-import org.dase.cogan.operation.Node;
-import org.dase.cogan.operation.UniversalQuantifier;
+import org.dase.cogan.operations.Conjunction;
+import org.dase.cogan.operations.Implication;
+import org.dase.cogan.operations.Node;
+import org.dase.cogan.operations.UniversalQuantifier;
 
 public class Rule
 {

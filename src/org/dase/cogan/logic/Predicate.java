@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.dase.cogan.operation.Negation;
-import org.dase.cogan.operation.Node;
+import org.dase.cogan.operations.Negation;
+import org.dase.cogan.operations.Node;
 
 public class Predicate extends Node
 {

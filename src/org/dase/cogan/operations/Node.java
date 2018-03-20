@@ -1,4 +1,4 @@
-package org.dase.cogan.operation;
+package org.dase.cogan.operations;
 
 /**
  * This abstract class defines default behavior for all nodes in an expression.
