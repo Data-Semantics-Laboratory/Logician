@@ -90,6 +90,14 @@ public class ClausalForm
 				}
 			}
 		}
+		else if(node instanceof UniversalQuantifier)
+		{
+			Quantifier universal = (Quantifier) node;
+			Node boundFormula = universal.getFormula();
+			String boundVar = universal.getBoundVar();
+			scope.add(boundVar);
+			clausalFormHelper(clauses, scope, boundFormula);
+		}
 		// Otherwise, add the node to the disjunctive clause
 		else
 		{

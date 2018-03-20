@@ -18,7 +18,7 @@ public class RulifierREPL
 	public void ontoTest()
 	{
 		String pathname = "resources/";
-		pathname += "trajectory.owl";
+		pathname += "chessgame.owl";
 		OntologyIngestor.ingest(pathname);
 	}
 	
@@ -39,7 +39,7 @@ public class RulifierREPL
 
 			// TODO debug code!
 			// String line = keyboard.nextLine();
-			String line = "Ax > * Bx Cx Dx";
+			String line = "/A1 /A2 > a(1,2) b(1,2)";
 
 			loop = !line.equals("exit");
 			if(loop)

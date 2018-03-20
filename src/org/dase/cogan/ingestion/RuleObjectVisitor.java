@@ -204,25 +204,17 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 
 	private void writeOpenBrace()
 	{
-		// writer.writeOpenBrace();
 		writer.append("{");
 	}
 
 	private void writeCloseBrace()
 	{
-		// writer.writeCloseBrace();
 		writer.append("}");
 	}
 
 	private void writeScope()
 	{
 		writer.write(curScope());
-	}
-
-	private void writeHardSpace()
-	{
-		writer.write(" ");
-		// writer.write("~");
 	}
 
 	/********************************************************/
@@ -245,20 +237,18 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	{
 		String name = escapeName(shortFormProvider.getShortForm(ce));
 
-		// TODO prevent operand printing before this is implemented
-		// Do not write anything for top
-		if(!name.equals("Thing") || true)
+		if(!suppress)
 		{
-			if(!suppress)
-			{
-				name += "(";
-				name += curScope();
-				name += ")";
-			}
-
-			write(name);
+			name += "(";
+			name += curScope();
+			name += ")";
 		}
 
+		write(name);
+		if(!suppress)
+		{
+			writeSpace();
+		}
 	}
 
 	@Override
@@ -268,11 +258,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		// Write quantifier
 		write(ALL);
-		write(curScope() + " ");
+		writeScope();
+		writeSpace();
 		// Write implication in preorder
 		write(RARROW);
 		axiom.getSubClass().accept(this);
-		writeSpace();
 		axiom.getSuperClass().accept(this);
 		///////////////////////
 		scope.pop();
@@ -284,33 +274,19 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		// Get Classes
 		List<OWLClassExpression> classExpressions = asList(axiom.classExpressions());
 
-		if(classExpressions.size() > 2)
+		suppress = true;
+		write("#AllDifferent(");
+		// Write each class
+		for(Iterator<OWLClassExpression> it = classExpressions.iterator(); it.hasNext();)
 		{
-			suppress = true;
-			// Use AllDisjoint syntax to prevent huge number of axioms
-			write("#AllDifferent(");
-			// Write each class
-			for(Iterator<OWLClassExpression> it = classExpressions.iterator(); it.hasNext();)
+			it.next().accept(this);
+			if(it.hasNext())
 			{
-				it.next().accept(this);
-				if(it.hasNext())
-				{
-					write(",");
-				}
+				write(",");
 			}
-			write(")");
-			suppress = false;
 		}
-		else
-		{
-			// Split into two axioms
-			OWLClassExpression lhs = classExpressions.get(0);
-			OWLClassExpression rhs = classExpressions.get(1);
-
-			df.getOWLObjectIntersectionOf(lhs, rhs).accept(this);
-			write(RARROW);
-
-		}
+		write(")");
+		suppress = false;
 	}
 
 	@Override
@@ -321,7 +297,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		if(classExpressions.size() > 2)
 		{
 			suppress = true;
-			write("EquivalentClasses&(");
+			write("#EquivalentClasses(");
 			// Write each class
 			for(Iterator<OWLClassExpression> it = classExpressions.iterator(); it.hasNext();)
 			{
@@ -337,6 +313,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		}
 		else
 		{
+			// TODO
 			// Split into two axioms
 			OWLClassExpression lhs = classExpressions.get(0);
 			OWLClassExpression rhs = classExpressions.get(1);
@@ -374,6 +351,10 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		}
 
 		write(prop + s);
+		if(!suppress)
+		{
+			writeSpace();
+		}
 	}
 
 	@Override
@@ -422,8 +403,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeSpace();
 		write(RARROW);
 		ce.getProperty().accept(this);
-		writeSpace();
-		writeNested(ce.getFiller());
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -437,8 +417,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeSpace();
 		write(AND);
 		ce.getProperty().accept(this);
-		writeSpace();
-		writeNested(ce.getFiller());
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -453,36 +432,53 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeScope();
 		ce.getProperty().accept(this);
 		write(AND);
-		writeNested(ce.getFiller());
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
 	@Override
 	public void visit(OWLObjectMaxCardinality ce)
 	{
-		scope.push(usedVars++);
-		write(MAX);
-		write(ce.getCardinality());
-		writeScope();
-		writeHardSpace();
-		ce.getProperty().accept(this);
+		int max = ce.getCardinality();
+		for(int i = 0; i < max; i++)
+		{
+			write(ALL);
+			scope.push(usedVars++);
+			writeScope();
+			writeSpace();
+		}
+
+		// TODO
 		write(AND);
-		writeNested(ce.getFiller());
-		scope.pop();
+		ce.getProperty().accept(this);
+		ce.getFiller().accept(this);
+
+		// Pop off all used variables.
+		for(int i = 0; i < max; i++, scope.pop())
+			;
 	}
 
 	@Override
 	public void visit(OWLObjectMinCardinality ce)
 	{
-		scope.push(usedVars++);
-		write(MIN);
-		write(ce.getCardinality());
-		writeScope();
-		writeHardSpace();
-		ce.getProperty().accept(this);
+		int min = ce.getCardinality();
+
+		for(int i = 0; i < min; i++)
+		{
+			write(SOME);
+			scope.push(usedVars++);
+			writeScope();
+			writeSpace();
+		}
+
+		// TODO
 		write(AND);
-		writeNested(ce.getFiller());
-		scope.pop();
+		ce.getProperty().accept(this);
+		ce.getFiller().accept(this);
+
+		// Pop off all used variables.
+		for(int i = 0; i < min; i++, scope.pop())
+			;
 	}
 
 	@Override
@@ -552,7 +548,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLObjectComplementOf ce)
 	{
 		write(NOT);
-		writeNested(ce.getOperand());
+		ce.getOperand().accept(this);
 	}
 
 	@Override
@@ -565,7 +561,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		for(int i = 0; i < nOps; i++)
 		{
 			operands.get(i).accept(this);
-			writeSpace();
 			if(i + 2 < nOps)
 			{
 				write(OR);
@@ -576,14 +571,16 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLObjectIntersectionOf ce)
 	{
-		for(Iterator<? extends OWLClassExpression> it = ce.operands().iterator(); it.hasNext();)
+		List<? extends OWLClassExpression> operands = asList(ce.operands());
+		int nOps = operands.size();
+
+		write(AND);
+		for(int i = 0; i < nOps; i++)
 		{
-			it.next().accept(this);
-			if(it.hasNext())
+			operands.get(i).accept(this);
+			if(i + 2 < nOps)
 			{
-				writeSpace();
 				write(AND);
-				writeSpace();
 			}
 		}
 	}
@@ -598,7 +595,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeSpace();
 		write(RARROW);
 		df.getOWLObjectSomeValuesFrom(axiom.getProperty(), df.getOWLThing()).accept(this);
-		writeSpace();
 		axiom.getDomain().accept(this);
 		scope.pop();
 	}
@@ -612,7 +608,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeSpace();
 		write(RARROW);
 		df.getOWLThing().accept(this);
-		writeSpace();
 		df.getOWLObjectAllValuesFrom(axiom.getProperty(), axiom.getRange()).accept(this);
 		scope.pop();
 	}
@@ -622,7 +617,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLDataProperty property)
 	{
 		String prop = escapeName(shortFormProvider.getShortForm(property));
-		prop = "\\text{" + prop + "}";
 
 		String s = "";
 		if(!suppress)
@@ -653,12 +647,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		write(ALL);
 		writeScope();
-		write("(");
-		ce.getProperty().accept(this);
-		write(RARROW);
 		writeSpace();
-		writeNested(ce.getFiller());
-		write(")");
+		write(RARROW);
+		ce.getProperty().accept(this);
+		writeSpace();
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -668,11 +661,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.push(usedVars++);
 		write(SOME);
 		writeScope();
-		write("(");
+		writeSpace();
+		write(RARROW);
 		ce.getProperty().accept(this);
-		write(AND);
-		writeNested(ce.getFiller());
-		write(")");
+		writeSpace();
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -686,7 +679,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeScope();
 		ce.getProperty().accept(this);
 		write(AND);
-		writeNested(ce.getFiller());
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -699,7 +692,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeScope();
 		ce.getProperty().accept(this);
 		write(AND);
-		writeNested(ce.getFiller());
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -712,7 +705,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeScope();
 		ce.getProperty().accept(this);
 		write(AND);
-		writeNested(ce.getFiller());
+		ce.getFiller().accept(this);
 		scope.pop();
 	}
 
@@ -859,7 +852,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLDatatype node)
 	{
-		String name = "\\text{" + getRendering(node) + "}";
+		String name = getRendering(node);
 
 		if(!suppress)
 		{
@@ -1019,12 +1012,16 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLSubObjectPropertyOfAxiom axiom)
 	{
 		scope.push(usedVars++);
+		write(ALL);
+		writeScope();
+		writeSpace();
 		scope.push(usedVars++);
-
-		axiom.getSubProperty().accept(this);
+		write(ALL);
+		writeScope();
 		writeSpace();
+		
 		write(RARROW);
-		writeSpace();
+		axiom.getSubProperty().accept(this);
 		axiom.getSuperProperty().accept(this);
 
 		scope.pop();
@@ -1095,7 +1092,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLDataComplementOf node)
 	{
 		write(NOT);
-		writeNested(node.getDataRange());
+		node.getDataRange().accept(this);
 	}
 
 	// TODO
@@ -1229,18 +1226,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	}
 
 	/*********************** TOOLS *****************/
-	private void writeNested(OWLClassExpression classExpression)
-	{
-		openBracket(classExpression);
-		classExpression.accept(this);
-		closeBracket(classExpression);
-	}
-
-	private void writeNested(OWLObject expression)
-	{
-		expression.accept(this);
-	}
-
 	private void openBracket(OWLClassExpression classExpression)
 	{
 		if(LatexBracketChecker.requiresBracket(classExpression))
