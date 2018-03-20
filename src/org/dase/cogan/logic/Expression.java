@@ -3,10 +3,10 @@ package org.dase.cogan.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dase.cogan.operation.BinaryOperator;
-import org.dase.cogan.operation.Node;
-import org.dase.cogan.operation.Quantifier;
-import org.dase.cogan.operation.UnaryOperator;
+import org.dase.cogan.operations.BinaryOperator;
+import org.dase.cogan.operations.Node;
+import org.dase.cogan.operations.Quantifier;
+import org.dase.cogan.operations.UnaryOperator;
 
 public class Expression
 {

@@ -1,4 +1,4 @@
-package org.dase.cogan.operation;
+package org.dase.cogan.operations;
 
 /** A UnaryOperator is a node that has only one child */
 public abstract class UnaryOperator extends Node

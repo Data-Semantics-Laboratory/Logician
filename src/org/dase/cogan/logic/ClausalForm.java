@@ -3,10 +3,10 @@ package org.dase.cogan.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dase.cogan.operation.Disjunction;
-import org.dase.cogan.operation.Node;
-import org.dase.cogan.operation.Quantifier;
-import org.dase.cogan.operation.UniversalQuantifier;
+import org.dase.cogan.operations.Disjunction;
+import org.dase.cogan.operations.Node;
+import org.dase.cogan.operations.Quantifier;
+import org.dase.cogan.operations.UniversalQuantifier;
 
 /**
  * The ClausalForm class is a representation of an expression in Disjunctive

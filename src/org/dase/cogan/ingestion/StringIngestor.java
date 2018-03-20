@@ -5,13 +5,13 @@ import java.util.Stack;
 import org.dase.cogan.logic.Expression;
 import org.dase.cogan.logic.Predicate;
 import org.dase.cogan.logic.PredicateRelation;
-import org.dase.cogan.operation.Conjunction;
-import org.dase.cogan.operation.Disjunction;
-import org.dase.cogan.operation.ExistentialQuantifier;
-import org.dase.cogan.operation.Implication;
-import org.dase.cogan.operation.Negation;
-import org.dase.cogan.operation.Node;
-import org.dase.cogan.operation.UniversalQuantifier;
+import org.dase.cogan.operations.Conjunction;
+import org.dase.cogan.operations.Disjunction;
+import org.dase.cogan.operations.ExistentialQuantifier;
+import org.dase.cogan.operations.Implication;
+import org.dase.cogan.operations.Negation;
+import org.dase.cogan.operations.Node;
+import org.dase.cogan.operations.UniversalQuantifier;
 
 public class StringIngestor
 {

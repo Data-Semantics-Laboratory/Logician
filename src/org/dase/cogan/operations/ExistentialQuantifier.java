@@ -1,4 +1,4 @@
-package org.dase.cogan.operation;
+package org.dase.cogan.operations;
 
 public class ExistentialQuantifier extends Quantifier
 {
