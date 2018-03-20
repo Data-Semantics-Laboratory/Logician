@@ -62,7 +62,7 @@ public class Rule
 		{
 			createQuantifierChain(implication);
 		}
-		else
+		else // do not include the outermost universals for readability
 		{
 			rule = implication;
 		}
