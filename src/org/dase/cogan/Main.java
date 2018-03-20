@@ -16,7 +16,15 @@ public class Main
 		else if(flag.equals("-t"))
 		{
 			RulifierREPL repl = new RulifierREPL();
-			repl.ontoTest();
+			
+			if(args[1].equals("string"))
+			{
+				repl.stringTest();
+			}
+			else
+			{
+				repl.ontoTest();
+			}
 		}
 		else
 		{
