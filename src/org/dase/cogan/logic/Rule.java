@@ -120,10 +120,14 @@ public class Rule
 		return this.expr;
 	}
 
+	/** Returns a latex formatted string for the rule. */
+	public String toLatexString()
+	{
+		return this.rule.toLatexString();
+	}
+	
 	public String toString()
 	{
-		// TODO
-		return rule.toString();
+		return this.rule.toString();
 	}
-
 }

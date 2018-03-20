@@ -20,9 +20,9 @@ public class Predicate extends Node
 		super.setLabel(label);
 		/* Extract the bound variables */
 		// Get the strings
-		String argString = predToken.substring(argIndex+1, predToken.length()-1);
+		String argString = predToken.substring(argIndex + 1, predToken.length() - 1);
 		// Tokenize
-		String[] argTokens = argString.split(","); 
+		String[] argTokens = argString.split(",");
 		// Add to the arglist
 		args = new ArrayList<>();
 		for(String arg : argTokens)
@@ -52,7 +52,28 @@ public class Predicate extends Node
 		return this;
 	}
 
-	/** Properly formate the args with commas a parens. */
+	/**
+	 * Properly format the args with commas and parens such that it is a valid
+	 * latex string
+	 */
+	public String toLatexString()
+	{
+		String line = super.getLatexLabel();
+		line += "(";
+		for(Iterator<String> i = args.iterator(); i.hasNext();)
+		{
+			String arg = "x_{" + i.next() + "}";
+			if(i.hasNext())
+			{
+				arg += ",";
+			}
+			line += arg;
+		}
+		line += ")";
+		return line;
+	}
+
+	/** Properly format the args with commas and parens. */
 	public String toString()
 	{
 		String line = super.getLabel();

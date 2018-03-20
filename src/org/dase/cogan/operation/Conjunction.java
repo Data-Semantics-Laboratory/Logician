@@ -33,4 +33,14 @@ public class Conjunction extends BinaryOperator
 		// Done
 		return conjunction;
 	}
+	
+	/** Infix latex string */
+	public String toLatexString()
+	{
+		String line = super.getLeftFormula().toLatexString();
+		line += " \\wedge ";
+		line += super.getRightFormula().toLatexString();
+		
+		return line; // TODO document
+	}
 }

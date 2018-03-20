@@ -33,4 +33,14 @@ public class ExistentialQuantifier extends Quantifier
 		// Done
 		return existential;
 	}
+	
+	/** Infix latex string */
+	public String toLatexString()
+	{
+		String line = "\\exists ";
+		line += "(";
+		line += super.getFormula().toLatexString();
+		line += ")";
+		return line; // TODO document
+	}
 }

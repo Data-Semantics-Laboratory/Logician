@@ -17,6 +17,7 @@ import org.dase.cogan.ingestion.RuleObjectVisitor;
 import org.dase.cogan.ingestion.StringIngestor;
 import org.dase.cogan.logic.CannotConvertToRuleException;
 import org.dase.cogan.logic.Expression;
+import org.dase.cogan.logic.Rule;
 import org.semanticweb.owlapi.io.AbstractOWLRenderer;
 import org.semanticweb.owlapi.io.OWLRendererException;
 import org.semanticweb.owlapi.latex.renderer.LatexRendererIOException;
@@ -25,6 +26,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLEntityComparator;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
@@ -70,19 +72,19 @@ public class RuleRenderer extends AbstractOWLRenderer
 			sortEntities(o.objectPropertiesInSignature()).forEach(p -> {
 			writeEntities(stringWriter, w, renderer, p, sortAxioms(o.axioms(p))); });
 			
-//			w.write("\\section*{Data properties}\n");
-//			o.dataPropertiesInSignature().sorted(entityComparator).forEach(
-//			prop -> { writeEntity(w, renderer, prop,
-//			sortAxioms(o.axioms(prop))); });
-//			
-//			w.write("\\section*{Individuals}\n");
-//			o.individualsInSignature().sorted(entityComparator).forEach(i ->
-//			{ writeEntity(w, renderer, i, sortAxioms(o.axioms(i))); });
-//			
-//			w.write("\\section*{Datatypes}\n");
-//			o.datatypesInSignature().sorted(entityComparator).forEach(type ->
-//			{ writeEntity(w, renderer, type, sortAxioms(o.axioms(type,
-//			Imports.EXCLUDED))); });
+			w.write("\\section*{Data properties}\n");
+			o.dataPropertiesInSignature().sorted(entityComparator).forEach(
+			prop -> { writeEntities(stringWriter, w, renderer, prop,
+			sortAxioms(o.axioms(prop))); });
+			
+			w.write("\\section*{Individuals}\n");
+			o.individualsInSignature().sorted(entityComparator).forEach(i ->
+			{ writeEntities(stringWriter, w, renderer, i, sortAxioms(o.axioms(i))); });
+			
+			w.write("\\section*{Datatypes}\n");
+			o.datatypesInSignature().sorted(entityComparator).forEach(type ->
+			{ writeEntities(stringWriter, w, renderer, type, sortAxioms(o.axioms(type,
+			Imports.EXCLUDED))); });
 
 			w.write("\\end{document}\n");
 			w.flush();
@@ -114,25 +116,27 @@ public class RuleRenderer extends AbstractOWLRenderer
 			for(Iterator<? extends OWLAxiom> it = axioms.iterator(); it.hasNext();)
 			{
 				OWLAxiom axiom = it.next();
-				System.out.println("\t\tParsing: " + axiom.getNNF().toString());
+				System.out.println("Parsing: " + axiom.getNNF().toString());
 				renderer.reset();
 				axiom.getNNF().accept(renderer);
 
 				// Get string from stream
 				String foplString = sw.toString();
 				sw.getBuffer().setLength(0); // this does what .flush would do
-
+				System.out.println("\t"+foplString);
+				// Construct an expression from the rule
 				Expression expr = StringIngestor.ingest(foplString);
 				try
 				{
-					String rule = expr.toRule().toString();
-					
-					w.write(rule);
+					// Convert the Expression to a Rule
+					Rule rule = expr.toRule();
+					String ruleString = rule.toLatexString();
+					// Write the rule to the latex document
+					w.write(ruleString);
 					if(it.hasNext())
 					{
 						w.write("\\\\");
 					}
-
 					w.write("\n");
 				}
 				catch(CannotConvertToRuleException e)

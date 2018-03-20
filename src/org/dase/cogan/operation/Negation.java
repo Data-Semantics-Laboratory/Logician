@@ -49,4 +49,13 @@ public class Negation extends UnaryOperator
 		// Done
 		return formulaNNF;
 	}
+	
+	/** Infix latex string */
+	public String toLatexString()
+	{
+		String line = "\\lnot ";
+		line += super.getFormula().toLatexString();
+		
+		return line; // TODO document
+	}
 }

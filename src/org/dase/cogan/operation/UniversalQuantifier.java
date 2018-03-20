@@ -34,4 +34,15 @@ public class UniversalQuantifier extends Quantifier
 		// Done
 		return universal;
 	}
+	
+	/** Infix latex string */
+	public String toLatexString()
+	{
+		String line = "\\forall ";
+		line += "x_{" + super.getBoundVar() + "}";
+		line += "(";
+		line += super.getFormula().toLatexString();
+		line += ")";
+		return line; // TODO document
+	}
 }

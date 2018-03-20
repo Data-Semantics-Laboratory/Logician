@@ -33,4 +33,14 @@ public class Disjunction extends BinaryOperator
 		// Done
 		return disjunction;
 	}
+	
+	/** Infix latex string */
+	public String toLatexString()
+	{
+		String line = super.getLeftFormula().toLatexString();
+		line += " \\vee ";
+		line += super.getRightFormula().toLatexString();
+		
+		return line; // TODO document
+	}
 }

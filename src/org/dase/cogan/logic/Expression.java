@@ -29,7 +29,7 @@ public class Expression
 	{
 		return new ClausalForm(this.NNF());
 	}
-	
+
 	/**
 	 * This method will construct an expression that is logically equivalent to
 	 * the original expression, but it is in negation normal form (NNF).
@@ -64,18 +64,18 @@ public class Expression
 	public void printScope()
 	{
 		List<String> scope = new ArrayList<>();
-		
+
 		Quantifier quantifier = (Quantifier) root;
 		String boundVar = quantifier.getBoundVar();
 		scope.add(boundVar);
-		
+
 		printScopeHelper(quantifier.getFormula(), scope);
 	}
 
 	public void printScopeHelper(Node node, List<String> scope)
 	{
 		System.out.println("\tNode " + node.getLabel() + " has scope " + scope);
-		
+
 		if(node.isQuantifier())
 		{
 			Quantifier quantifier = (Quantifier) node;
@@ -100,12 +100,18 @@ public class Expression
 			// Do nothing if Predicate
 		}
 	}
-	
+
 	public Node getRoot()
 	{
 		return this.root;
 	}
-	
+
+	/** Returns a latex formatted string */
+	public String toLatexString()
+	{
+		return this.root.toLatexString();
+	}
+
 	public String toString()
 	{
 		return root.toString();

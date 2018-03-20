@@ -11,11 +11,22 @@ public abstract class Node
 {
 	private String label;
 
-	/** This allows us to negate an entire expression subtree */
+	/**
+	 * This allows us to recursively construct the negation of the expression.
+	 */
 	public abstract Node negate();
 
-	/** This allows us to construct an nnf of the expression subtree */
+	/**
+	 * This allows us to recursively construct the negation normal form of the
+	 * expression.
+	 */
 	public abstract Node toNNF();
+
+	/**
+	 * This allows us to recursively construct the latex string of the
+	 * expression.
+	 */
+	public abstract String toLatexString();
 
 	///////////////////////////
 	public boolean isPredicate()
@@ -44,6 +55,15 @@ public abstract class Node
 		return label;
 	}
 
+	public String getLatexLabel()
+	{
+		String line = "\\text{";
+		line += label;
+		line += "}";
+		
+		return line;
+	}
+	
 	public String getLabel()
 	{
 		return label;

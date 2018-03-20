@@ -222,7 +222,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	private void writeHardSpace()
 	{
 		writer.write(" ");
-//		writer.write("~");
+		// writer.write("~");
 	}
 
 	/********************************************************/
@@ -560,14 +560,17 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLObjectUnionOf ce)
 	{
-		for(Iterator<? extends OWLClassExpression> it = ce.operands().iterator(); it.hasNext();)
+		List<? extends OWLClassExpression> operands = asList(ce.operands());
+		int nOps = operands.size();
+
+		write(OR);
+		for(int i = 0; i < nOps; i++)
 		{
-			it.next().accept(this);
-			if(it.hasNext())
+			operands.get(i).accept(this);
+			writeSpace();
+			if(i + 2 < nOps)
 			{
-				writeSpace();
 				write(OR);
-				writeSpace();
 			}
 		}
 	}

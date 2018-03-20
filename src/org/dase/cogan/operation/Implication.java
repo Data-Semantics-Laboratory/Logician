@@ -45,4 +45,14 @@ public class Implication extends BinaryOperator
 		// Done
 		return disjunction;
 	}
+	
+	/** Infix latex string */
+	public String toLatexString()
+	{
+		String line = super.getLeftFormula().toLatexString();
+		line += " &\\rightarrow ";
+		line += super.getRightFormula().toLatexString();
+		
+		return line; // TODO document
+	}
 }
