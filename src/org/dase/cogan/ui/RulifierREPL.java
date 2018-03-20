@@ -18,7 +18,7 @@ public class RulifierREPL
 	public void ontoTest()
 	{
 		String pathname = "resources/";
-		pathname += "chessgame.owl";
+		pathname += "trajectory.owl";
 		OntologyIngestor.ingest(pathname);
 	}
 	

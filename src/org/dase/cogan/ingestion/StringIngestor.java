@@ -57,7 +57,7 @@ public class StringIngestor
 	 * This method creates the formula recursively by determining which sort of
 	 * node to construct based on the ingested token
 	 */
-	public static Node ingestHelper()
+	private static Node ingestHelper()
 	{
 		String token = stack.pop();
 		Node node = null;
@@ -109,5 +109,12 @@ public class StringIngestor
 		}
 
 		return node;
+	}
+	
+	public static boolean isMultiexpression(String expression)
+	{
+		boolean isMultiexpression = expression.contains("|");
+		
+		return isMultiexpression;
 	}
 }

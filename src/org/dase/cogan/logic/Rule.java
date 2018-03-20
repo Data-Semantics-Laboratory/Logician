@@ -162,4 +162,12 @@ public class Rule
 	{
 		return this.rule.toString();
 	}
+	
+	/** Returns this rule as an expression */
+	public Expression toExpression()
+	{
+		Expression expression = new Expression(this.rule);
+		
+		return expression;
+	}
 }

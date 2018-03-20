@@ -188,13 +188,12 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	/********************************************************/
 	private void writeSpace()
 	{
-		// writer.writeSpace();
 		writer.write(" ");
 	}
 
 	private void write(Object o)
 	{
-		writer.append(o.toString());
+		writer.write(o.toString());
 	}
 
 	private void write(int i)
@@ -236,17 +235,13 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLClass ce)
 	{
 		String name = escapeName(shortFormProvider.getShortForm(ce));
-
-		if(!suppress)
-		{
-			name += "(";
-			name += curScope();
-			name += ")";
-		}
-
 		write(name);
+		
 		if(!suppress)
 		{
+			write("(");
+			writeScope();
+			write(")");
 			writeSpace();
 		}
 	}
@@ -294,7 +289,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	{
 		List<OWLClassExpression> classExpressions = asList(axiom.classExpressions());
 
-		if(classExpressions.size() > 2)
+		if(classExpressions.size() > 2) // TODO
 		{
 			suppress = true;
 			write("#EquivalentClasses(");
@@ -305,7 +300,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 				if(it.hasNext())
 				{
 					write(",");
-					writeSpace();
 				}
 			}
 			write(")");
@@ -319,7 +313,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 			OWLClassExpression rhs = classExpressions.get(1);
 
 			df.getOWLSubClassOfAxiom(lhs, rhs).accept(this);
-			write("\\\\\n");
+			write("|");
 			this.reset();
 			df.getOWLSubClassOfAxiom(rhs, lhs).accept(this);
 		}
@@ -407,7 +401,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		scope.pop();
 	}
 
-	// TODO
 	@Override
 	public void visit(OWLObjectSomeValuesFrom ce)
 	{

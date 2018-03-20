@@ -123,32 +123,49 @@ public class RuleRenderer extends AbstractOWLRenderer
 				// Get string from stream
 				String foplString = sw.toString();
 				sw.getBuffer().setLength(0); // this does what .flush would do
-				System.out.println("\t"+foplString);
-				// Construct an expression from the rule
-				Expression expr = StringIngestor.ingest(foplString);
-				try
+				
+				if(StringIngestor.isMultiexpression(foplString))
 				{
-					// Convert the Expression to a Rule
-					Rule rule = expr.toRule();
-					String ruleString = rule.toLatexString();
-					// Write the rule to the latex document
-					w.write(ruleString);
-					if(it.hasNext())
+					String[] exprStrings = foplString.split("\\|");
+					for(String exprString : exprStrings)
 					{
-						w.write("\\\\");
+						writeRule(exprString, w, it);
 					}
-					w.write("\n");
 				}
-				catch(CannotConvertToRuleException e)
+				else
 				{
-					System.out.println(foplString);
-					System.out.println("The expression " + expr + "could not be converted to a rule.");
+					writeRule(foplString, w, it);
 				}
 			}
 			w.write("\\end{align*}\n\n");
 		}
 	}
 
+	public void writeRule(String foplString, LatexWriter w, Iterator<?extends OWLAxiom> it)
+	{
+		System.out.println("\t"+foplString);
+		// Construct an expression from the rule
+		Expression expr = StringIngestor.ingest(foplString);
+		try
+		{
+			// Convert the Expression to a Rule
+			Rule rule = expr.toRule();
+			String ruleString = rule.toLatexString();
+			// Write the rule to the latex document
+			w.write(ruleString);
+			if(it.hasNext())
+			{
+				w.write("\\\\");
+			}
+			w.write("\n");
+		}
+		catch(CannotConvertToRuleException e)
+		{
+			System.out.println(foplString);
+			System.out.println("The expression " + expr + "could not be converted to a rule.");
+		}
+	}
+	
 	/** Sorts entities alphabetically */
 	private <T extends OWLEntity> Collection<T> sortEntities(Stream<T> entities)
 	{
