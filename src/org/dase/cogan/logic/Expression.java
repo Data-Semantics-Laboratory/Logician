@@ -21,7 +21,8 @@ public class Expression
 	/** This method attempts to convert the method to a rule */
 	public Rule toRule() throws CannotConvertToRuleException
 	{
-		return new Rule(this.NNF());
+		// do not include leading quantifier chain
+		return new Rule(this.NNF(), false);
 	}
 
 	/** This method attempts to conver the method to its clausal form */
@@ -36,8 +37,6 @@ public class Expression
 	 * 
 	 * To do so, we will give a method to every node "toNNF()" so that it may
 	 * construct a NNF version of itself.
-	 * 
-	 * @return
 	 */
 	public Expression NNF()
 	{

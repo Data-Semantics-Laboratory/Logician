@@ -31,13 +31,11 @@ public class OntologyIngestor
 		}
 		catch(OWLRendererException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Could not render ontology.");
 		}
 		catch(FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Could not create output file.");
 		}
 	}
 

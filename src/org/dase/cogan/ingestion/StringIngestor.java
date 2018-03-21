@@ -110,11 +110,16 @@ public class StringIngestor
 
 		return node;
 	}
-	
+
+	/**
+	 * This method is used for detecting whether or not a parsed axiom has
+	 * resulted in multiple rules. Generally this is only generated when the
+	 * encountered axiom is Equivalency.
+	 */
 	public static boolean isMultiexpression(String expression)
 	{
 		boolean isMultiexpression = expression.contains("|");
-		
+
 		return isMultiexpression;
 	}
 }

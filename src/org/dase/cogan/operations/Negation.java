@@ -11,6 +11,12 @@ public class Negation extends UnaryOperator
 		super.setFormula(formula);
 	}
 
+	/** Probably better practice than instanceof? */
+	public boolean isNegation()
+	{
+		return true;
+	}
+	
 	/** standard to string */
 	public String toString()
 	{

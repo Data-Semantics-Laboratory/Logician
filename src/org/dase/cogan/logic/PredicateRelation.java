@@ -8,10 +8,21 @@ import org.dase.cogan.ingestion.StringIngestor;
 import org.dase.cogan.operations.Node;
 import org.dase.cogan.operations.Variable;
 
+/**
+ * A predicate relation is something that relates properties of predicates. For
+ * example, AllDifferent is shorthand for saying that the domains of all the
+ * arguments of a unary predicate are disjoint.
+ * 
+ * AllDifferent, Equivalent, Functional
+ * 
+ * @author Cogs
+ *
+ */
 public class PredicateRelation extends Node
 {
 	private List<Node> args;
-	
+
+	/** Default Constructor */
 	public PredicateRelation(String predToken)
 	{
 		this.args = new ArrayList<>();
@@ -24,11 +35,15 @@ public class PredicateRelation extends Node
 		 * Extract the bound variables. This varies from a predicate because the
 		 * tokens may be complex.
 		 */
-		String argString = predToken.substring(argIndex+1, predToken.length() - 1);
+		String argString = predToken.substring(argIndex + 1, predToken.length() - 1);
 		String[] argTokens = argString.split(",");
 		parseArgTokens(argTokens);
 	}
 
+	/**
+	 * Iteratively parses the arguments of the predicate relation. It also
+	 * detects and ingests embedded expressions.
+	 */
 	private void parseArgTokens(String[] argTokens)
 	{
 		for(String argToken : argTokens)
@@ -55,7 +70,7 @@ public class PredicateRelation extends Node
 			}
 		}
 	}
-	
+
 	/**
 	 * Properly format the args with commas and parens such that it is a valid
 	 * latex string

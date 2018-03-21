@@ -39,14 +39,4 @@ public class OWLConnector
 	{
 		return dataFactory;
 	}
-
-	public void setOntology(OWLOntology ontology)
-	{
-		this.ontology = ontology;
-	}
-
-	public void setDataFactory(OWLDataFactory dataFactory)
-	{
-		this.dataFactory = dataFactory;
-	}
 }

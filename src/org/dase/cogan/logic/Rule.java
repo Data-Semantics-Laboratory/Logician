@@ -22,7 +22,8 @@ public class Rule
 	{
 		this.expr = expr;
 		this.clausalForm = expr.toClausalForm();
-
+		this.verbose = true;
+		
 		if(expr.getRoot() instanceof PredicateRelation)
 		{
 			rule = expr.getRoot();
@@ -33,12 +34,12 @@ public class Rule
 		}
 	}
 
+	/** Constructor that enables/disables leading quantifier chain */
 	public Rule(Expression expr, boolean verbose) throws CannotConvertToRuleException
 	{
 		this.expr = expr;
 		this.clausalForm = expr.toClausalForm();
-		this.verbose = verbose;
-
+		
 		if(expr.getRoot() instanceof PredicateRelation)
 		{
 			rule = expr.getRoot();

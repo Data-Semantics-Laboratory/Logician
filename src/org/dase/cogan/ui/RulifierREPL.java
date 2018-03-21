@@ -15,10 +15,11 @@ public class RulifierREPL
 
 	}
 
+	/** This method tests the ingestion of an ontology */
 	public void ontoTest()
 	{
 		String pathname = "resources/";
-		pathname += "trajectory.owl";
+		pathname += "mbe.owl";
 		OntologyIngestor.ingest(pathname);
 	}
 	
@@ -39,7 +40,7 @@ public class RulifierREPL
 
 			// TODO debug code!
 			// String line = keyboard.nextLine();
-			String line = "/A1 > * Fix(1) /A2 > startsFrom(2,1) - Segment(2) EndingFix(1)";
+			String line = "/A1 > /E2 * hasTrustScore(1,2) Thing(2) + Agent(1) MicroblogEntry(1)";
 
 			loop = !line.equals("exit");
 			if(loop)

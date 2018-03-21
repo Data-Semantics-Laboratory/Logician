@@ -20,6 +20,7 @@ public class Variable extends Node
 		return this;
 	}
 
+	/** Latex formatted string */
 	public String toLatexString()
 	{
 		String line = "\\text{";
