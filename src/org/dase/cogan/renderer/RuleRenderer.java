@@ -116,9 +116,9 @@ public class RuleRenderer extends AbstractOWLRenderer
 			for(Iterator<? extends OWLAxiom> it = axioms.iterator(); it.hasNext();)
 			{
 				OWLAxiom axiom = it.next();
-				System.out.println("Parsing: " + axiom.getNNF().toString());
+				System.out.println("Parsing: " + axiom.toString());
 				renderer.reset();
-				axiom.getNNF().accept(renderer);
+				axiom.accept(renderer);
 
 				// Get string from stream
 				String foplString = sw.toString();

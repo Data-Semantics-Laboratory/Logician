@@ -19,7 +19,7 @@ public class RulifierREPL
 	public void ontoTest()
 	{
 		String pathname = "resources/";
-		pathname += "mbe.owl";
+		pathname += "TreePattern.owl";
 		OntologyIngestor.ingest(pathname);
 	}
 	
@@ -40,7 +40,7 @@ public class RulifierREPL
 
 			// TODO debug code!
 			// String line = keyboard.nextLine();
-			String line = "/A1 > /E2 * hasTrustScore(1,2) Thing(2) + Agent(1) MicroblogEntry(1)";
+			String line = "/A1 > - LeafNode(1) NonLeafNode(1)";
 
 			loop = !line.equals("exit");
 			if(loop)
@@ -49,12 +49,13 @@ public class RulifierREPL
 				System.out.println("The string ingested is: " + e);
 				System.out.println("The negation is:        " + e.negated());
 				System.out.println("The NNF is:             " + e.NNF());
-				System.out.println("Printing scope listing for the NNF: ");
-				e.NNF().printScope();
+				System.out.println("Not printing scope listing for the NNF: ");
+//				e.NNF().printScope();
 				System.out.println("The clausal form is:    " + e.toClausalForm());
 				try
 				{
 					System.out.println("The rule form is:       " + e.toRule());
+					System.out.println("The latexstring is:     " + e.toRule().toLatexString());
 				}
 				catch(CannotConvertToRuleException e1)
 				{

@@ -54,6 +54,11 @@ public abstract class Node
 		return false;
 	}
 	
+	public boolean isLiteral()
+	{
+		return false;
+	}
+	
 	///////////////////////////
 	public String toString()
 	{

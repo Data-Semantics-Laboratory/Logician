@@ -37,6 +37,11 @@ public class Predicate extends Node
 		return true;
 	}
 
+	public boolean isLiteral()
+	{
+		return true;
+	}
+	
 	/** Negation of an atom P is -P */
 	public Node negate()
 	{

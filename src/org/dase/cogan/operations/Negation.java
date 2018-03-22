@@ -17,6 +17,11 @@ public class Negation extends UnaryOperator
 		return true;
 	}
 	
+	public boolean isLiteral()
+	{
+		return super.getFormula().isLiteral();
+	}
+	
 	/** standard to string */
 	public String toString()
 	{

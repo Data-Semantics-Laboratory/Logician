@@ -236,7 +236,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	{
 		String name = escapeName(shortFormProvider.getShortForm(ce));
 		write(name);
-		
+
 		if(!suppress)
 		{
 			write("(");
@@ -362,12 +362,17 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLInverseObjectPropertiesAxiom axiom)
 	{
+		scope.push(usedVars++);
+		write(ALL);
+		writeScope();
+		writeSpace();
+		scope.push(usedVars++);
+		write(ALL);
+		writeScope();
+		writeSpace();
+		write(RARROW);
 		axiom.getFirstProperty().accept(this);
-		writeSpace();
-		write(EQUIV);
-		writeSpace();
 		axiom.getSecondProperty().accept(this);
-		write(INVERSE);
 	}
 
 	@Override
@@ -474,6 +479,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 			;
 	}
 
+	/*********************************************/
 	@Override
 	public void visit(OWLFunctionalObjectPropertyAxiom axiom)
 	{
@@ -503,28 +509,24 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLObjectOneOf ce)
 	{
 		write("#OneOf");
-		writeOpenBrace();
+		write("(");
 		for(Iterator<? extends OWLIndividual> it = ce.individuals().iterator(); it.hasNext();)
 		{
 			it.next().accept(this);
 			if(it.hasNext())
 			{
-				writeSpace();
-				write(OR);
-				writeSpace();
+				write(",");
 			}
 		}
-		writeCloseBrace();
+		write(")");
 	}
 
 	@Override
 	public void visit(OWLNamedIndividual individual)
 	{
-		String s = "\\text{";
-		s += escapeName(shortFormProvider.getShortForm(individual));
-		s += "}";
+		String name = escapeName(shortFormProvider.getShortForm(individual));
 
-		write(s);
+		write(name);
 	}
 
 	// TODO
@@ -631,6 +633,10 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		}
 
 		write(prop + s);
+		if(!suppress)
+		{
+			writeSpace();
+		}
 	}
 
 	/************** Data Quantifiers ***************/
@@ -643,7 +649,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeSpace();
 		write(RARROW);
 		ce.getProperty().accept(this);
-		writeSpace();
 		ce.getFiller().accept(this);
 		scope.pop();
 	}
@@ -657,7 +662,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		writeSpace();
 		write(RARROW);
 		ce.getProperty().accept(this);
-		writeSpace();
 		ce.getFiller().accept(this);
 		scope.pop();
 	}
@@ -679,27 +683,46 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLDataMaxCardinality ce)
 	{
-		scope.push(usedVars++);
-		write(MAX);
-		write(ce.getCardinality());
-		writeScope();
-		ce.getProperty().accept(this);
+		int max = ce.getCardinality();
+		for(int i = 0; i < max; i++)
+		{
+			write(ALL);
+			scope.push(usedVars++);
+			writeScope();
+			writeSpace();
+		}
+
+		// TODO
 		write(AND);
+		ce.getProperty().accept(this);
 		ce.getFiller().accept(this);
-		scope.pop();
+
+		// Pop off all used variables.
+		for(int i = 0; i < max; i++, scope.pop())
+			;
 	}
 
 	@Override
 	public void visit(OWLDataMinCardinality ce)
 	{
-		scope.push(usedVars++);
-		write(MIN);
-		write(ce.getCardinality());
-		writeScope();
-		ce.getProperty().accept(this);
+		int min = ce.getCardinality();
+
+		for(int i = 0; i < min; i++)
+		{
+			write(SOME);
+			scope.push(usedVars++);
+			writeScope();
+			writeSpace();
+		}
+
+		// TODO
 		write(AND);
+		ce.getProperty().accept(this);
 		ce.getFiller().accept(this);
-		scope.pop();
+
+		// Pop off all used variables.
+		for(int i = 0; i < min; i++, scope.pop())
+			;
 	}
 
 	/*********************************************/
@@ -715,13 +738,12 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLAsymmetricObjectPropertyAxiom axiom)
 	{
+		write("#Assymetric");
+		write("(");
+		suppress = true;
 		axiom.getProperty().accept(this);
-		writeSpace();
-		write(SUBCLASS);
-		writeSpace();
-		write(NOT);
-		axiom.getProperty().accept(this);
-		write(INVERSE);
+		suppress = false;
+		write(")");
 	}
 
 	@Override
@@ -739,31 +761,47 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLDataPropertyDomainAxiom axiom)
 	{
+		scope.push(usedVars++);
+		write(ALL);
+		writeScope();
+		writeSpace();
+		write(RARROW);
 		df.getOWLDataSomeValuesFrom(axiom.getProperty(), df.getTopDatatype()).accept(this);
-		writeSpace();
-		write(SUBCLASS);
-		writeSpace();
 		axiom.getDomain().accept(this);
+		scope.pop();
 	}
 
 	@Override
 	public void visit(OWLDataPropertyRangeAxiom axiom)
 	{
-		write(TOP);
+		scope.push(usedVars++);
+		write(SOME);
+		writeScope();
 		writeSpace();
-		write(SUBCLASS);
-		writeSpace();
+		write(RARROW);
+		df.getOWLThing().accept(this);
 		df.getOWLDataAllValuesFrom(axiom.getProperty(), axiom.getRange()).accept(this);
+		scope.pop();
 	}
 
 	@Override
 	public void visit(OWLSubDataPropertyOfAxiom axiom)
 	{
+		scope.push(usedVars++);
+		write(ALL);
+		writeScope();
+		writeSpace();
+		scope.push(usedVars++);
+		write(ALL);
+		writeScope();
+		writeSpace();
+
+		write(RARROW);
 		axiom.getSubProperty().accept(this);
-		writeSpace();
-		write(SUBCLASS);
-		writeSpace();
 		axiom.getSuperProperty().accept(this);
+
+		scope.pop();
+		scope.pop();
 	}
 
 	@Override
@@ -808,15 +846,14 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLDisjointObjectPropertiesAxiom axiom)
 	{
-		write("Disjoint");
-		write("&(");
+		write("#Disjoint");
+		write("(");
 		for(Iterator<OWLObjectPropertyExpression> it = axiom.properties().iterator(); it.hasNext();)
 		{
 			it.next().accept(this);
 			if(it.hasNext())
 			{
 				write(",");
-				writeSpace();
 			}
 		}
 		write(")");
@@ -825,8 +862,8 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLDisjointUnionAxiom axiom)
 	{
-		write("DisjointClasses");
-		write("&(");
+		write("#DisjointClasses");
+		write("(");
 
 		for(Iterator<OWLClassExpression> it = axiom.classExpressions().iterator(); it.hasNext();)
 		{
@@ -834,7 +871,6 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 			if(it.hasNext())
 			{
 				write(",");
-				writeSpace();
 			}
 		}
 
@@ -846,24 +882,25 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	public void visit(OWLDatatype node)
 	{
 		String name = getRendering(node);
+		write(name);
 
 		if(!suppress)
 		{
-			name += "(";
-			name += curScope();
-			name += ")";
+			write("(");
+			writeScope();
+			write(")");
+			writeSpace();
 		}
-
-		write(name);
 	}
 
 	@Override
 	public void visit(OWLLiteral node)
 	{
-		write("\\text{" + getRendering(node.getDatatype()) + "}");
+		write(getRendering(node.getDatatype()));
 		write("(");
-		write("\\text{``" + node.getLiteral() + "''}");
+		write("``" + node.getLiteral() + "''");
 		write(")");
+		writeSpace();
 	}
 
 	/************* Assertions *********************/
@@ -941,9 +978,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLIrreflexiveObjectPropertyAxiom axiom)
 	{
-		write("IrreflexiveObjectProperty");
-		write("&(");
+		write("#IrreflexiveObjectProperty");
+		write("(");
+		suppress = true;
 		axiom.getProperty().accept(this);
+		suppress = false;
 		write(")");
 	}
 
@@ -1012,7 +1051,7 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 		write(ALL);
 		writeScope();
 		writeSpace();
-		
+
 		write(RARROW);
 		axiom.getSubProperty().accept(this);
 		axiom.getSuperProperty().accept(this);
@@ -1024,9 +1063,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLReflexiveObjectPropertyAxiom axiom)
 	{
-		write("ReflexiveProperty");
-		write("&(");
+		write("#ReflexiveProperty");
+		write("(");
+		suppress = true;
 		axiom.getProperty().accept(this);
+		suppress = false;
 		write(")");
 	}
 
@@ -1050,12 +1091,12 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLSymmetricObjectPropertyAxiom axiom)
 	{
+		write("#Symmetric");
+		write("(");
+		suppress = true;
 		axiom.getProperty().accept(this);
-		writeSpace();
-		write(EQUIV);
-		writeSpace();
-		axiom.getProperty().accept(this);
-		write(INVERSE);
+		suppress = false;
+		write(")");
 	}
 
 	@Override
@@ -1069,9 +1110,11 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLTransitiveObjectPropertyAxiom axiom)
 	{
-		write("TransitiveProperty");
-		write("&(");
+		write("#TransitiveProperty");
+		write("(");
+		suppress = true;
 		axiom.getProperty().accept(this);
+		suppress = false;
 		write(")");
 	}
 
@@ -1092,18 +1135,17 @@ public class RuleObjectVisitor implements OWLObjectVisitor
 	@Override
 	public void visit(OWLDataOneOf node)
 	{
-		// writeOpenBrace();
+		write("#OneOf");
+		write("(");
 		for(Iterator<? extends OWLLiteral> it = node.values().iterator(); it.hasNext();)
 		{
 			it.next().accept(this);
 			if(it.hasNext())
 			{
-				writeSpace();
-				write(OR);
-				writeSpace();
+				write(",");
 			}
 		}
-		// writeCloseBrace();
+		write(")");
 	}
 
 	@Override

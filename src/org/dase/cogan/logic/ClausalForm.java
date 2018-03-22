@@ -35,7 +35,7 @@ public class ClausalForm
 		clausalForm();
 		numPositiveLiterals();
 		// Convert to disjunctive rule, if necessary.
-		if(this.numPositiveLiterals > 1)
+		if(this.numPositiveLiterals > 1 && clauses.size() > 2)
 		{
 			convertToDisjunctiveRule();
 		}
@@ -146,7 +146,7 @@ public class ClausalForm
 		numPositiveLiterals = 0;
 		for(Node node : clauses)
 		{
-			if(!node.isNegation() && !node.isQuantifier())
+			if(!node.isNegation() && node.isPredicate())
 			{
 				numPositiveLiterals++;
 			}
