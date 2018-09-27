@@ -19,7 +19,7 @@ public class RulifierREPL
 	public void ontoTest()
 	{
 		String pathname = "resources/";
-		pathname += "TreePattern.owl";
+		pathname += "trajectory.owl";
 		OntologyIngestor.ingest(pathname);
 	}
 	
@@ -67,6 +67,29 @@ public class RulifierREPL
 			loop = false;
 		}
 
+		// close resources
+		keyboard.close();
+	}
+	
+	public void run()
+	{
+		// Init resources for loop
+		Scanner keyboard = new Scanner(System.in);
+		boolean loop = true;
+
+		while(loop)
+		{
+			System.out.println("Use the empty string to quit.");
+			System.out.print("Enter a pathname with extension for ingestion: ");
+			String pathname = keyboard.nextLine();
+
+			loop = !pathname.equals("");
+			if(loop)
+			{
+				OntologyIngestor.ingest(pathname);
+			}
+		}
+		System.out.println("Exiting...");
 		// close resources
 		keyboard.close();
 	}

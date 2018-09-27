@@ -8,6 +8,8 @@ import org.dase.cogan.renderer.RuleRenderer;
 import org.semanticweb.owlapi.io.OWLRendererException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+import com.google.common.io.Files;
+
 public class OntologyIngestor
 {
 	public static void ingest(String pathname)
@@ -21,6 +23,7 @@ public class OntologyIngestor
 			String filename = extractFilename(pathname);
 			String output = "output/" + filename + ".tex";
 			File outputFile = new File(output);
+			outputFile.getParentFile().mkdirs(); // verifiest output directory exists
 			PrintWriter pw = new PrintWriter(outputFile);
 			// Render the ontology
 			ruleRenderer.render(owlConnector.getOntology(), pw);
@@ -39,6 +42,11 @@ public class OntologyIngestor
 		}
 	}
 
+	private static void checkFileSystem()
+	{
+		
+	}
+	
 	/** This method simply extracts the filename from the provided path */
 	private static String extractFilename(String pathname)
 	{

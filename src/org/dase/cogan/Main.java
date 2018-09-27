@@ -7,29 +7,41 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		String flag = args[0];
-
-		if(flag.equals("-d"))
+		try
 		{
+			String flag = args[0];
 
-		}
-		else if(flag.equals("-t"))
-		{
-			RulifierREPL repl = new RulifierREPL();
-			
-			if(args[1].equals("string"))
+			if(flag.equals("-d"))
 			{
-				repl.stringTest();
+				(new RulifierREPL()).run();
 			}
-			else
+			else if(flag.equals("-t"))
 			{
-				repl.ontoTest();
+				RulifierREPL repl = new RulifierREPL();
+
+				if(args[1].equals("string"))
+				{
+					repl.stringTest();
+				}
+				else
+				{
+					repl.ontoTest();
+				}
+			}
+			else // -g
+			{
+				RulifierGUI rg = new RulifierGUI();
+				rg.init();
 			}
 		}
-		else
+		catch(ArrayIndexOutOfBoundsException e) // run gui if no arguments
 		{
 			RulifierGUI rg = new RulifierGUI();
 			rg.init();
+		}
+		finally
+		{
+			//
 		}
 	}
 }
